@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
-  final SenhaOculta _senhaOculta = SenhaOculta();
+  final ControllerGenerico<bool> _senhaOculta = ControllerGenerico(data: false);
 
     bool _todosPreenchidos = false;
 
@@ -72,13 +72,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextField(
                       controller: _senhaController,
-                      obscureText: !_senhaOculta.visivel,
+                      obscureText: !_senhaOculta.data,
                       decoration: InputDecoration(
                         labelText: "Senha",
                         hintText: "Digite sua senha",
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _senhaOculta.visivel
+                            _senhaOculta.data
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                             color: Colors.deepPurple.shade400,
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _senhaOculta.alternar();
+                              _senhaOculta.data = !_senhaOculta.data;
                             });
                           },
                         ),
@@ -119,10 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         context.go('/cadastro');
                       },
-                      splashColor: Colors.transparent, // sem efeito de clique
-                      highlightColor:
-                          Colors.transparent, // sem efeito de clique
-                      hoverColor: Colors.transparent, // sem efeito de hover
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
                       child: Text.rich(
                         TextSpan(
                           text: 'Não possui login? ',

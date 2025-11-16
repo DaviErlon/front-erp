@@ -1,42 +1,55 @@
-import 'package:flutter/material.dart';
+class ControllerGenerico<T> {
+  final void Function()? onPressed;
 
-class TipoPlano {
-  Plano _plano = Plano.basico;
+  ControllerGenerico({this.onPressed, required T data}) : _data = data;
 
-  Plano get plano => _plano;
+  bool isSelecionado(T data) => _data == data;
 
-  set altplano(Plano novoPlano) {
-    _plano = novoPlano;
+  T _data;
+
+  T get data => _data;
+
+  set data(T data) {
+    _data = data;
+    onPressed?.call();
   }
 }
 
-enum Plano { basico, intermediario, completo }
+class ControllerDialogTitulos {
+  bool? _pago;
+  bool? _aprovado;
+  bool? _recebido;
 
-class SenhaOculta {
-  bool _visivel = false;
+  ControllerDialogTitulos({bool? pago, bool? aprovado, bool? recebido})
+    : _pago = pago,
+      _aprovado = aprovado,
+      _recebido = recebido;
 
-  bool get visivel => _visivel;
+  set pago(bool? p) => _pago = p;
+  set aprovado(bool? p) => _aprovado = p;
+  set recebido(bool? p) => _recebido = p;
 
-  set visivel(bool value) => _visivel = value;
+  bool? get pago => _pago;
+  bool? get aprovado => _aprovado;
+  bool? get recebido => _recebido;
 
-  void alternar() => _visivel = !_visivel;
+  void updateFromMap(Map<String, dynamic> data) {
+    if (data.containsKey('pago') && (data['pago'] is bool?)) {
+      _pago = data['pago'];
+    }
+
+    if (data.containsKey('aprovado') && (data['aprovado'] is bool?)) {
+      _aprovado = data['aprovado'];
+    }
+
+    if (data.containsKey('recebido') && (data['recebido'] is bool?)) {
+      _recebido = data['recebido'];
+    }
+  }
 }
 
-class ModuloSelecionado {
-  final VoidCallback onPressed;
+enum Funcionario { ceo, gestor, operador, almoxarife, financeiro, tesoureiro}
 
-  ModuloSelecionado({required this.onPressed});
+enum Plano { basico, intermediario, completo, nenhum }
 
-  int _modulo = 0;
-
-  bool isSelecionado(int id) {
-    return _modulo == id;
-  }
-
-  get modulo => _modulo;
-
-  set modulo(int m) {
-    _modulo = m;
-    onPressed();
-  }
-}
+enum Pesquisa { cpf, cpnj, nome, telefone }

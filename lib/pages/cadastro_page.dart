@@ -15,8 +15,9 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _senhaController = TextEditingController();
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
-  final TipoPlano _plano = TipoPlano();
-  final SenhaOculta _senhaOculta = SenhaOculta();
+  final ControllerGenerico<bool> _senhaOculta = ControllerGenerico(data: false);
+
+  late ControllerGenerico<Plano> _plano;
 
   bool _todosPreenchidos = false;
 
@@ -27,6 +28,12 @@ class _CadastroPageState extends State<CadastroPage> {
     _senhaController.addListener(_verificarCampos);
     _emailController.addListener(_verificarCampos);
     _cpfController.addListener(_verificarCampos);
+    _plano = ControllerGenerico(
+      onPressed: () {
+        setState(() {});
+      },
+      data: Plano.nenhum
+    );
   }
 
   void _verificarCampos() {
@@ -34,7 +41,8 @@ class _CadastroPageState extends State<CadastroPage> {
         _emailController.text.isNotEmpty &&
         _cpfController.text.isNotEmpty &&
         _nomeController.text.isNotEmpty &&
-        _senhaController.text.isNotEmpty;
+        _senhaController.text.isNotEmpty &&
+        _plano.data != Plano.nenhum;
     setState(() => _todosPreenchidos = preenchidos);
   }
 
@@ -96,13 +104,13 @@ class _CadastroPageState extends State<CadastroPage> {
                     ),
                     TextField(
                       controller: _senhaController,
-                      obscureText: !_senhaOculta.visivel,
+                      obscureText: !_senhaOculta.data,
                       decoration: InputDecoration(
                         labelText: "Senha",
                         hintText: "Digite sua senha",
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _senhaOculta.visivel
+                            _senhaOculta.data
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                             color: Colors.deepPurple.shade400,
@@ -110,7 +118,7 @@ class _CadastroPageState extends State<CadastroPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _senhaOculta.alternar();
+                              _senhaOculta.data = !_senhaOculta.data;
                             });
                           },
                         ),
@@ -119,33 +127,17 @@ class _CadastroPageState extends State<CadastroPage> {
                     Row(
                       spacing: 14,
                       children: [
-                        BotaoPlano(
-                          text: 'Básico\n00,00R\$',
-                          onPressed: () {
-                            setState(() {
-                              _plano.altplano = Plano.basico;
-                            });
-                          },
-                          filled: _plano.plano == Plano.basico,
-                        ),
-                        BotaoPlano(
-                          text: 'Intermediário\n00,00R\$',
-                          onPressed: () {
-                            setState(() {
-                              _plano.altplano = Plano.intermediario;
-                            });
-                          },
-                          filled: _plano.plano == Plano.intermediario,
-                        ),
-                        BotaoPlano(
-                          text: 'Completo\n00,00R\$',
-                          onPressed: () {
-                            setState(() {
-                              _plano.altplano = Plano.completo;
-                            });
-                          },
-                          filled: _plano.plano == Plano.completo,
-                        ),
+                        ...{
+                          'Básico\n00,00R\$': Plano.basico,
+                          'Intermediário\n00,00R\$': Plano.intermediario,
+                          'Completo\n00,00R\$': Plano.completo,
+                        }.entries.map((entry) {
+                          return BotaoPlano(
+                            text: entry.key,
+                            controller: _plano,
+                            plano: entry.value,
+                          );
+                        }),
                       ],
                     ),
 
@@ -175,10 +167,9 @@ class _CadastroPageState extends State<CadastroPage> {
                       onTap: () {
                         context.go('/');
                       },
-                      splashColor: Colors.transparent, // sem efeito de clique
-                      highlightColor:
-                          Colors.transparent, // sem efeito de clique
-                      hoverColor: Colors.transparent, // sem efeito de hover
+                      splashColor: Colors.transparent, 
+                      highlightColor: Colors.transparent, 
+                      hoverColor: Colors.transparent,
                       child: Text.rich(
                         TextSpan(
                           text: 'Já é cadastrado? ',

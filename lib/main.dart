@@ -44,7 +44,8 @@ class MyApp extends StatelessWidget {
             fontSize: 36,
             fontWeight: FontWeight.w600,
           ),
-          labelLarge: GoogleFonts.roboto(fontSize: 14),
+          labelLarge: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400),
+          labelMedium: GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.w400),
         ),
 
         elevatedButtonTheme: ElevatedButtonThemeData(

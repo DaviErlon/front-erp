@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_sidebar.dart';
 import 'package:fronterp/components/molde_tela.dart';
+import 'package:fronterp/modules/fornecedores.dart';
 import 'package:fronterp/utils/utils.dart';
+import 'package:fronterp/modules/titulos_ceo_gestor.dart';
+import 'package:fronterp/modules/funcionarios.dart';
+import 'package:fronterp/modules/clientes.dart';
 
 class CeoPage extends StatefulWidget {
   const CeoPage({super.key});
@@ -11,27 +15,30 @@ class CeoPage extends StatefulWidget {
 }
 
 class _CeoPageState extends State<CeoPage> {
-  late ModuloSelecionado _modulo;
+  late ControllerGenerico<int> _modulo;
 
   @override
   void initState() {
     super.initState();
-    _modulo = ModuloSelecionado(
+    _modulo = ControllerGenerico(
       onPressed: () {
         setState(() {});
       },
+      data: 0,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MoldeTela( 
+    return MoldeTela(
       sideBar: Column(
         children: [
           ...{
             'Títulos': Icons.receipt_long,
-            'Funcionários': Icons.search,
-            'Consultas': Icons.list_alt,
+            'Funcionários': Icons.groups_2,
+            'Clientes': Icons.person_search,
+            'Fornecedores': Icons.local_shipping,
+            'Produtos': Icons.inventory_2,
             'Logs': Icons.history_edu,
           }.entries.toList().asMap().entries.map((mapEntry) {
             final index = mapEntry.key;
@@ -42,12 +49,22 @@ class _CeoPageState extends State<CeoPage> {
               id: index,
               texto: chave,
               icone: icone,
-              moduloSelecionado: _modulo,
+              controller: _modulo,
             );
           }),
         ],
       ),
-      body: Center(),
+      body: IndexedStack(
+        index: _modulo.data,
+        children: [
+          ModuloTitulos(),
+          FuncionarioCeoGestor(),
+          ClientesCeoGestor(),
+          FornecedoresCeoGestor(),
+          Center(),
+          Center(),
+        ],
+      ),
     );
   }
 }

@@ -43,64 +43,56 @@ class MoldeTela extends StatelessWidget {
                     ),
                   ),
                   const Divider(),
-                  SizedBox(height: 50),
-                  SizedBox(height: 300, child: sideBar),
-                  Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        width: 80,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            context.go('/');
-                          },
-                          style: Theme.of(context).elevatedButtonTheme.style
-                              ?.copyWith(
-                                backgroundColor: WidgetStatePropertyAll(
-                                  Colors.transparent,
-                                ),
-                                elevation: WidgetStatePropertyAll(0),
-                                foregroundColor: WidgetStatePropertyAll(
-                                  Colors.deepPurple,
-                                ),
-                                shape:
-                                    WidgetStateProperty.resolveWith<
-                                      RoundedRectangleBorder
-                                    >((states) {
-                                      if (states.contains(
-                                        WidgetState.hovered,
-                                      )) {
-                                        return RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          side: const BorderSide(
-                                            color: Colors.deepPurple,
-                                            width: 3,
-                                          ),
-                                        );
-                                      }
-                                      return RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        side: const BorderSide(
-                                          color: Colors.deepPurple,
-                                          width: 2,
-                                        ),
-                                      );
-                                    }),
-                                overlayColor: WidgetStatePropertyAll(
-                                  Colors.deepPurple.withValues(alpha: 0.05),
-                                ),
-                                textStyle: WidgetStatePropertyAll(
-                                  const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.deepPurple,
-                                  ),
-                                ),
+                  SizedBox(height: 30),
+                  SizedBox(height: 370, child: sideBar),
+                  SizedBox(
+                    width: 80,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.go('/');
+                      },
+                      style: Theme.of(context).elevatedButtonTheme.style
+                          ?.copyWith(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
+                            elevation: WidgetStatePropertyAll(0),
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.deepPurple,
+                            ),
+                            shape:
+                                WidgetStateProperty.resolveWith<
+                                  RoundedRectangleBorder
+                                >((states) {
+                                  if (states.contains(WidgetState.hovered)) {
+                                    return RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: const BorderSide(
+                                        color: Colors.deepPurple,
+                                        width: 3,
+                                      ),
+                                    );
+                                  }
+                                  return RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: const BorderSide(
+                                      color: Colors.deepPurple,
+                                      width: 2,
+                                    ),
+                                  );
+                                }),
+                            overlayColor: WidgetStatePropertyAll(
+                              Colors.deepPurple.withValues(alpha: 0.05),
+                            ),
+                            textStyle: WidgetStatePropertyAll(
+                              const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.deepPurple,
                               ),
-                          child: const Text("Sair"),
-                        ),
-                      ),
+                            ),
+                          ),
+                      child: const Text("Sair"),
                     ),
                   ),
                 ],

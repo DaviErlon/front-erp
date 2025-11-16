@@ -11,15 +11,16 @@ class OperadorPage extends StatefulWidget {
 }
 
 class _OperadorPageState extends State<OperadorPage> {
-  late ModuloSelecionado _modulo;
+  late ControllerGenerico<int> _modulo;
 
   @override
   void initState() {
     super.initState();
-    _modulo = ModuloSelecionado(
+    _modulo = ControllerGenerico(
       onPressed: () {
         setState(() {});
       },
+      data: 0,
     );
   }
 
@@ -42,7 +43,7 @@ class _OperadorPageState extends State<OperadorPage> {
               id: index,
               texto: chave,
               icone: icone,
-              moduloSelecionado: _modulo,
+              controller: _modulo,
             );
           }),
         ],

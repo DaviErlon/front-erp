@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fronterp/utils/utils.dart';
 
 class BotaoSidebar extends StatelessWidget {
-  final ModuloSelecionado moduloSelecionado;
+  final ControllerGenerico<int> controller;
   final String texto;
   final int id;
   final IconData icone;
@@ -12,18 +12,18 @@ class BotaoSidebar extends StatelessWidget {
     required this.texto,
     required this.id,
     required this.icone,
-    required this.moduloSelecionado,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    bool selecionado = moduloSelecionado.isSelecionado(id);
+    bool selecionado = controller.isSelecionado(id);
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2),
       child: ElevatedButton(
         onPressed: () {
-          moduloSelecionado.modulo = id;
+          controller.data = id;
           
         },
         style: ButtonStyle(

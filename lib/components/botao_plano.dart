@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:fronterp/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BotaoPlano extends StatefulWidget {
   final String text;
-  final VoidCallback onPressed;
-  final bool filled;
+  final ControllerGenerico<Plano> controller;
+  final Plano plano;
 
   const BotaoPlano({
-    Key? key,
+    super.key,
     required this.text,
-    required this.onPressed,
-    this.filled = false,
-  }) : super(key: key);
+    required this.controller,
+    required this.plano,
+  });
 
   @override
   State<BotaoPlano> createState() => _BotaoPlanoState();
@@ -22,6 +23,9 @@ class _BotaoPlanoState extends State<BotaoPlano> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool filled = widget.controller.isSelecionado(widget.plano);
+
     return MouseRegion(
       onEnter: (_) => setState(() => isHover = true),
       onExit: (_) => setState(() => isHover = false),
@@ -29,23 +33,23 @@ class _BotaoPlanoState extends State<BotaoPlano> {
         width: 100,
         height: 70,
         child: OutlinedButton(
-          onPressed: widget.onPressed,
+          onPressed: () => widget.controller.data = widget.plano,
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.resolveWith((states) {
-              return widget.filled ? Colors.deepPurple : Colors.transparent;
+              return filled ? Colors.deepPurple : Colors.transparent;
             }),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             side: WidgetStateProperty.resolveWith((states) {
-              if (!widget.filled && isHover) {
+              if (!filled && isHover) {
                 return const BorderSide(color: Colors.deepPurple, width: 2);
               }
               return BorderSide(
-                color: widget.filled
+                color: filled
                     ? Colors.deepPurple
                     : Colors.deepPurple.shade100,
-                width: widget.filled ? 2 : (isHover ? 2 : 1),
+                width: filled ? 2 : (isHover ? 2 : 1),
               );
             }),
             padding: WidgetStateProperty.all(EdgeInsets.zero),
@@ -58,7 +62,7 @@ class _BotaoPlanoState extends State<BotaoPlano> {
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
-                color: widget.filled
+                color: filled
                     ? Colors.white
                     : (isHover ? Colors.deepPurple : Colors.black),
               ),
