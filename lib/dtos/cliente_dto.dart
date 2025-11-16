@@ -10,7 +10,7 @@ class ClienteDto {
     required String nome,
   }) :_cpf = cpf,
       _telefone = telefone,
-      _nome = nome,
+      _nome = nome;
 
     //Setters
     

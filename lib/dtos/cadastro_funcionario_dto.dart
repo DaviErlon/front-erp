@@ -11,7 +11,7 @@ class CadastroFuncionarioDto {
     required String tipo,
   }) :_email = email,
       _senha = senha,
-      _tipo = tipo,
+      _tipo = tipo;
      
     //Setters
     
