@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_sidebar.dart';
 import 'package:fronterp/components/molde_tela.dart';
 import 'package:fronterp/modules/fornecedores.dart';
+import 'package:fronterp/modules/logs.dart';
+import 'package:fronterp/modules/produtos.dart';
 import 'package:fronterp/utils/utils.dart';
-import 'package:fronterp/modules/titulos_ceo_gestor.dart';
+import 'package:fronterp/modules/titulos.dart';
 import 'package:fronterp/modules/funcionarios.dart';
 import 'package:fronterp/modules/clientes.dart';
 
@@ -58,11 +60,11 @@ class _CeoPageState extends State<CeoPage> {
         index: _modulo.data,
         children: [
           ModuloTitulos(),
-          FuncionarioCeoGestor(),
-          ClientesCeoGestor(),
-          FornecedoresCeoGestor(),
-          Center(),
-          Center(),
+          ModuloFuncionario(),
+          ModuloClientesConsulta(),
+          ModuloFornecedoresConsulta(),
+          ModuloProdutosConsulta(),
+          ModuloLogs(),
         ],
       ),
     );

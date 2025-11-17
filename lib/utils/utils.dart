@@ -48,6 +48,39 @@ class ControllerDialogTitulos {
   }
 }
 
+class ControllerDialogProdutos {
+  bool? _esgotado;
+  bool? _encomendado;
+  bool? _reservado;
+
+  ControllerDialogProdutos({bool? esgotado, bool? encomendado, bool? reservado})
+    : _esgotado = esgotado,
+      _encomendado = encomendado,
+      _reservado = reservado;
+
+  set esgotado(bool? p) => _esgotado = p;
+  set encomendado(bool? p) => _encomendado = p;
+  set reservado(bool? p) => _reservado = p;
+
+  bool? get esgotado => _esgotado;
+  bool? get encomendado => _encomendado;
+  bool? get reservado => _reservado;
+
+  void updateFromMap(Map<String, dynamic> data) {
+    if (data.containsKey('esgotado') && (data['esgotado'] is bool?)) {
+      _esgotado = data['esgotado'];
+    }
+
+    if (data.containsKey('encomendado') && (data['encomendado'] is bool?)) {
+      _encomendado = data['encomendado'];
+    }
+
+    if (data.containsKey('reservado') && (data['reservado'] is bool?)) {
+      _reservado = data['reservado'];
+    }
+  }
+}
+
 enum Funcionario { ceo, gestor, operador, almoxarife, financeiro, tesoureiro}
 
 enum Plano { basico, intermediario, completo, nenhum }

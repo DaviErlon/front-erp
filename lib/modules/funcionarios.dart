@@ -3,14 +3,14 @@ import 'package:fronterp/components/botao_filtro.dart';
 import 'package:fronterp/components/filtro_dialog_funcionarios.dart';
 import 'package:fronterp/utils/utils.dart';
 
-class FuncionarioCeoGestor extends StatefulWidget {
-  const FuncionarioCeoGestor({super.key});
+class ModuloFuncionario extends StatefulWidget {
+  const ModuloFuncionario({super.key});
 
   @override
-  State<FuncionarioCeoGestor> createState() => _FuncionarioCeoGestorState();
+  State<ModuloFuncionario> createState() => _ModuloFuncionarioState();
 }
 
-class _FuncionarioCeoGestorState extends State<FuncionarioCeoGestor> {
+class _ModuloFuncionarioState extends State<ModuloFuncionario> {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
   Funcionario? _filtroTipoFuncionario;
 

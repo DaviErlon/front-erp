@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_filtro.dart';
+import 'package:fronterp/components/filtro_log.dart';
 import 'package:fronterp/utils/utils.dart';
 
-class ModuloClientesConsulta extends StatefulWidget {
-  const ModuloClientesConsulta({super.key});
+class ModuloLogs extends StatefulWidget {
+  const ModuloLogs({super.key});
 
   @override
-  State<ModuloClientesConsulta> createState() => _ModuloClientesConsultaState();
+  State<ModuloLogs> createState() => _ModuloLogsState();
 }
 
-class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
+class _ModuloLogsState extends State<ModuloLogs> {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
+  DateTime? _data = DateTime(DateTime.now().year);
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
             children: [
               const SizedBox(height: 15),
               SelectableText(
-                'Módulo de clientes',
+                'Módulo de logs',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Padding(
@@ -54,7 +56,7 @@ class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
                         child: TextField(
                           onSubmitted: (v) {},
                           decoration: InputDecoration(
-                            hintText: "Pesquise clientes",
+                            hintText: "Pesquise Logs",
                             hintStyle: TextStyle(
                               color: Colors.grey[400],
                               fontSize: 14,
@@ -121,6 +123,36 @@ class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
                         );
                       }),
                     ],
+                  ),
+                  const SizedBox(width: 10),
+                  InkWell(
+                    onTap: () async {
+                      final filtros = await showDialog<DateTime>(
+                        context: context,
+                        builder: (_) => const FiltroLog(),
+                      );
+
+                      setState(() {
+                        _data = filtros;
+                      });
+                    },
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Icon(
+                          Icons.filter_alt_outlined,
+                          size: 26,
+                          color: Colors.deepPurple,
+                        ),
+                        Text(
+                          'filtros',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

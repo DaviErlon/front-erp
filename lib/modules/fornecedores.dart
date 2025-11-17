@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_filtro.dart';
 import 'package:fronterp/utils/utils.dart';
 
-class FornecedoresCeoGestor extends StatefulWidget {
-  const FornecedoresCeoGestor({super.key});
+class ModuloFornecedoresConsulta extends StatefulWidget {
+  const ModuloFornecedoresConsulta({super.key});
 
   @override
-  State<FornecedoresCeoGestor> createState() => _FornecedoresCeoGestorState();
+  State<ModuloFornecedoresConsulta> createState() => _ModuloFornecedoresConsultaState();
 }
 
-class _FornecedoresCeoGestorState extends State<FornecedoresCeoGestor> {
+class _ModuloFornecedoresConsultaState extends State<ModuloFornecedoresConsulta> {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
 
   @override
