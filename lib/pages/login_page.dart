@@ -13,8 +13,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
   final ControllerGenerico<bool> _senhaOculta = ControllerGenerico(data: false);
+  final LoginService servicoLogin = LoginService();
 
-    bool _todosPreenchidos = false;
+  bool _todosPreenchidos = false;
 
   @override
   void initState() {
@@ -25,8 +26,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _verificarCampos() {
     final preenchidos =
-        _emailController.text.isNotEmpty &&
-        _senhaController.text.isNotEmpty;
+        _emailController.text.isNotEmpty && _senhaController.text.isNotEmpty;
     setState(() => _todosPreenchidos = preenchidos);
   }
 
@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +102,19 @@ class _LoginPageState extends State<LoginPage> {
                           opacity: _todosPreenchidos ? 1 : 0.8,
                           child: ElevatedButton(
                             onPressed: _todosPreenchidos
-                                ? () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Campos preenchidos!'),
+                                ? () async {
+                                    final response = await servicoLogin.login(
+                                      LoginDto(
+                                        email: _emailController.text,
+                                        senha: _senhaController.text,
                                       ),
                                     );
-                                    context.go('/operador');
+
+                                    if (!mounted) return;
+
+                                    
+
+                                    context.go('/ceo');
                                   }
                                 : null, // desativa o botão
                             child: const Text('Login'),
