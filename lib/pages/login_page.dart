@@ -3,6 +3,7 @@ import 'package:fronterp/dtos/login_dto.dart';
 import 'package:fronterp/services/login_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fronterp/utils/utils.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final ControllerGenerico<bool> _senhaOculta = ControllerGenerico(data: false);
   final LoginService servicoLogin = LoginService();
 
+  bool _todosPreenchidos = false;
   bool _todosPreenchidos = false;
 
   @override
@@ -60,23 +62,23 @@ class _LoginPageState extends State<LoginPage> {
                   spacing: 14,
                   children: [
                     SelectableText(
-                      'Login',
+                      'auth.login.title'.tr(),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: "E-mail",
-                        hintText: "exemplo@email.com",
+                      decoration: InputDecoration(
+                        labelText: 'auth.login.email_label'.tr(),
+                        hintText: 'auth.login.email_hint'.tr(),
                       ),
                     ),
                     TextField(
                       controller: _senhaController,
                       obscureText: !_senhaOculta.data,
                       decoration: InputDecoration(
-                        labelText: "Senha",
-                        hintText: "Digite sua senha",
+                        labelText: 'auth.login.password_label'.tr(),
+                        hintText: 'auth.login.password_hint'.tr(),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _senhaOculta.data
@@ -110,14 +112,20 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     );
 
-                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'auth.login.snackbar_all_filled'.tr(),
+                                        ),
+                                      ),
+                                    );
 
-                                    
+                                    if (!mounted) return;
 
                                     context.go('/ceo');
                                   }
                                 : null, // desativa o botão
-                            child: const Text('Login'),
+                            child: Text('auth.login.submit'.tr()),
                           ),
                         ),
                       ),
@@ -131,11 +139,11 @@ class _LoginPageState extends State<LoginPage> {
                       hoverColor: Colors.transparent,
                       child: Text.rich(
                         TextSpan(
-                          text: 'Não possui login? ',
+                          text: 'auth.login.no_account'.tr(),
                           style: Theme.of(context).textTheme.labelLarge,
                           children: [
                             TextSpan(
-                              text: 'Cadastre-se',
+                              text: 'auth.login.signup'.tr(),
                               style: Theme.of(context).textTheme.labelLarge!
                                   .copyWith(
                                     decoration: TextDecoration.underline,

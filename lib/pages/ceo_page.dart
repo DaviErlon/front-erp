@@ -5,6 +5,7 @@ import 'package:fronterp/modules/fornecedores.dart';
 import 'package:fronterp/modules/logs.dart';
 import 'package:fronterp/modules/produtos.dart';
 import 'package:fronterp/utils/utils.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fronterp/modules/titulos.dart';
 import 'package:fronterp/modules/funcionarios.dart';
 import 'package:fronterp/modules/clientes.dart';
@@ -36,12 +37,10 @@ class _CeoPageState extends State<CeoPage> {
       sideBar: Column(
         children: [
           ...{
-            'Títulos': Icons.receipt_long,
-            'Funcionários': Icons.groups_2,
-            'Clientes': Icons.person_search,
-            'Fornecedores': Icons.local_shipping,
-            'Produtos': Icons.inventory_2,
-            'Logs': Icons.history_edu,
+            'ceo.sidebar.titles': Icons.receipt_long,
+            'ceo.sidebar.employees': Icons.search,
+            'ceo.sidebar.queries': Icons.list_alt,
+            'ceo.sidebar.logs': Icons.history_edu,
           }.entries.toList().asMap().entries.map((mapEntry) {
             final index = mapEntry.key;
             final chave = mapEntry.value.key;
@@ -49,7 +48,7 @@ class _CeoPageState extends State<CeoPage> {
 
             return BotaoSidebar(
               id: index,
-              texto: chave,
+              texto: chave.tr(),
               icone: icone,
               controller: _modulo,
             );
