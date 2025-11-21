@@ -7,7 +7,7 @@ class LoginService {
   final Dio _dio;
   LoginService(this._dio);
 
-  Future<RespostaDTO> login(LoginDTO dto) async {
+  Future<RespostaDto> login(LoginDto dto) async {
     final res = await _dio.post('/Login', data: dto.toJson());
     return RespostaDTO.fromJson(res.data);
   

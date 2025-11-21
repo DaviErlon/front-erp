@@ -9,7 +9,7 @@ class LoginDto {
     required String senha,
     
   }) :_email = email,
-      _senha = senha,
+      _senha = senha;
 
     //Setters
     

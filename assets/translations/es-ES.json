@@ -1,0 +1,80 @@
+{
+  "almox": {
+    "sidebar": {
+      "titles": "Títulos",
+      "products": "Productos",
+      "suppliers": "Proveedores"
+    }
+  },
+
+  "auth": {
+    "signup": {
+      "title": "Regístrate",
+
+      "name_label": "Nombre",
+      "name_hint": "Ingresa tu nombre completo",
+
+      "cpf_label": "NIF/CPF",
+      "cpf_hint": "999.999.999-99",
+
+      "email_label": "Correo electrónico",
+      "email_hint": "ejemplo@email.com",
+
+      "password_label": "Contraseña",
+      "password_hint": "Ingresa tu contraseña",
+
+      "plan_basic": "Básico\n00,00€",
+      "plan_intermediate": "Intermedio\n00,00€",
+      "plan_full": "Completo\n00,00€",
+
+      "snackbar_all_filled": "¡Campos completos!",
+      "submit": "Finalizar",
+
+      "already_registered": "¿Ya tienes cuenta? ",
+      "login": "Inicia sesión"
+    },
+
+    "login": {
+      "title": "Inicio de sesión",
+
+      "email_label": "Correo electrónico",
+      "email_hint": "ejemplo@email.com",
+
+      "password_label": "Contraseña",
+      "password_hint": "Ingresa tu contraseña",
+
+      "snackbar_all_filled": "¡Campos completos!",
+      "submit": "Entrar",
+
+      "no_account": "¿No tienes cuenta? ",
+      "signup": "Regístrate"
+    }
+  },
+
+  "ceo": {
+    "sidebar": {
+      "titles": "Títulos",
+      "employees": "Empleados",
+      "queries": "Consultas",
+      "logs": "Registros"
+    }
+  },
+
+  "gestor": {
+    "sidebar": {
+      "titles": "Títulos",
+      "employees": "Empleados",
+      "queries": "Consultas",
+      "logs": "Registros"
+    }
+  },
+
+  "operador": {
+    "sidebar": {
+      "sell": "VENDER",
+      "products": "PRODUCTOS",
+      "clients": "CLIENTES",
+      "sales": "VENTAS"
+    }
+  }
+}

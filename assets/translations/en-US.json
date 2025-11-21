@@ -1,0 +1,80 @@
+{
+  "almox": {
+    "sidebar": {
+      "titles": "Invoices",
+      "products": "Products",
+      "suppliers": "Suppliers"
+    }
+  },
+
+  "auth": {
+    "signup": {
+      "title": "Sign up",
+
+      "name_label": "Name",
+      "name_hint": "Enter your full name",
+
+      "cpf_label": "Tax ID",
+      "cpf_hint": "999.999.999-99",
+
+      "email_label": "Email",
+      "email_hint": "example@email.com",
+
+      "password_label": "Password",
+      "password_hint": "Enter your password",
+
+      "plan_basic": "Basic\n$0.00",
+      "plan_intermediate": "Intermediate\n$0.00",
+      "plan_full": "Full\n$0.00",
+
+      "snackbar_all_filled": "All fields are filled!",
+      "submit": "Finish",
+
+      "already_registered": "Already registered? ",
+      "login": "Log in"
+    },
+
+    "login": {
+      "title": "Login",
+
+      "email_label": "Email",
+      "email_hint": "example@email.com",
+
+      "password_label": "Password",
+      "password_hint": "Enter your password",
+
+      "snackbar_all_filled": "All fields are filled!",
+      "submit": "Login",
+
+      "no_account": "Don't have an account? ",
+      "signup": "Sign up"
+    }
+  },
+
+  "ceo": {
+    "sidebar": {
+      "titles": "Invoices",
+      "employees": "Employees",
+      "queries": "Queries",
+      "logs": "Logs"
+    }
+  },
+
+  "gestor": {
+    "sidebar": {
+      "titles": "Invoices",
+      "employees": "Employees",
+      "queries": "Queries",
+      "logs": "Logs"
+    }
+  },
+
+  "operador": {
+    "sidebar": {
+      "sell": "SELL",
+      "products": "PRODUCTS",
+      "clients": "CLIENTS",
+      "sales": "SALES"
+    }
+  }
+}
