@@ -5,11 +5,11 @@ class ClienteDto {
   String _nome;
 
   ClienteDto({
-    String? id,
+    String id = '',
     required String cpf,
     required String telefone,
     required String nome,
-  }) :_id = id ?? '',
+  }) :_id = id,
       _cpf = cpf,
       _telefone = telefone,
       _nome = nome;

@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fronterp/dtos/cadastro_dto.dart';
 import 'package:fronterp/dtos/login_dto.dart';
-import 'package:fronterp/dtos/resposta_dto.dart';
 import 'package:fronterp/services/dio_client.dart';
 import 'package:fronterp/services/login_service.dart';
 

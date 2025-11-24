@@ -1,6 +1,6 @@
 class FuncionarioDto {
 
-  String? _id;
+  String _id;
   String _cpf;
   double _salario;
   double _bonus;
@@ -9,7 +9,7 @@ class FuncionarioDto {
   String _setor;
 
   FuncionarioDto({ 
-    String? id,
+    String id = '',
     required String cpf,
     required double salario,
     required double bonus,
@@ -40,7 +40,7 @@ class FuncionarioDto {
   String get telefone => _telefone;
   String get nome => _nome;
   String get setor => _setor;
-  String get id => _id ?? '';
+  String get id => _id;
 
   factory FuncionarioDto.fromJson(Map<String, dynamic> json) {
     return FuncionarioDto(
