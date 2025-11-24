@@ -1,0 +1,80 @@
+{
+  "almox": {
+    "sidebar": {
+      "titles": "títulos",
+      "products": "Produtos",
+      "suppliers": "Fornecedores"
+    }
+  },
+
+  "auth": {
+    "signup": {
+      "title": "Criar conta",
+
+      "name_label": "Nome",
+      "name_hint": "Digite seu nome completo",
+
+      "cpf_label": "CPF",
+      "cpf_hint": "999.999.999-99",
+
+      "email_label": "E-mail",
+      "email_hint": "exemplo@email.com",
+
+      "password_label": "Senha",
+      "password_hint": "Digite sua senha",
+
+      "plan_basic": "Básico\nR$0,00",
+      "plan_intermediate": "Intermediário\nR$0,00",
+      "plan_full": "Completo\nR$0,00",
+
+      "snackbar_all_filled": "Todos os campos foram preenchidos!",
+      "submit": "Finalizar",
+
+      "already_registered": "Já possui cadastro? ",
+      "login": "Entrar"
+    },
+
+    "login": {
+      "title": "Login",
+
+      "email_label": "E-mail",
+      "email_hint": "exemplo@email.com",
+
+      "password_label": "Senha",
+      "password_hint": "Digite sua senha",
+
+      "snackbar_all_filled": "Todos os campos foram preenchidos!",
+      "submit": "login",
+
+      "no_account": "Não tem uma conta? ",
+      "signup": "Criar conta"
+    }
+  },
+
+  "ceo": {
+    "sidebar": {
+      "titles": "Títulos",
+      "employees": "Funcionários",
+      "queries": "Consultas",
+      "logs": "Registros"
+    }
+  },
+
+  "gestor": {
+    "sidebar": {
+      "titles": "Títulos",
+      "employees": "Funcionários",
+      "queries": "Consultas",
+      "logs": "Registros"
+    }
+  },
+
+  "operador": {
+    "sidebar": {
+      "sell": "VENDER",
+      "products": "PRODUTOS",
+      "clients": "CLIENTES",
+      "sales": "VENDAS"
+    }
+  }
+}

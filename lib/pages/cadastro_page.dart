@@ -106,13 +106,13 @@ class _CadastroPageState extends State<CadastroPage> {
                       ),
                       TextField(
                         controller: _senhaController,
-                        obscureText: !_senhaOculta.visivel,
+                        obscureText: !_senhaOculta.data,
                         decoration: InputDecoration(
                           labelText: 'auth.signup.password_label'.tr(),
                           hintText: 'auth.signup.password_hint'.tr(),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _senhaOculta.visivel
+                              _senhaOculta.data
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               color: Colors.deepPurple.shade400,
@@ -120,7 +120,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _senhaOculta.alternar();
+                                _senhaOculta.data = !_senhaOculta.data;
                               });
                             },
                           ),
@@ -131,30 +131,18 @@ class _CadastroPageState extends State<CadastroPage> {
                         children: [
                           BotaoPlano(
                             text: 'auth.signup.plan_basic'.tr(),
-                            onPressed: () {
-                              setState(() {
-                                _plano.altplano = Plano.basico;
-                              });
-                            },
-                            filled: _plano.plano == Plano.basico,
+                            controller: _plano,
+                            plano: Plano.basico,
                           ),
                           BotaoPlano(
                             text: 'auth.signup.plan_intermediate'.tr(),
-                            onPressed: () {
-                              setState(() {
-                                _plano.altplano = Plano.intermediario;
-                              });
-                            },
-                            filled: _plano.plano == Plano.intermediario,
+                            controller: _plano,
+                            plano: Plano.intermediario,
                           ),
                           BotaoPlano(
-                            text: 'Completo\n00,00R\$',
-                            onPressed: () {
-                              setState(() {
-                                _plano.altplano = Plano.completo;
-                              });
-                            },
-                            filled: _plano.plano == Plano.completo,
+                            text: 'auth.signup.plan_full'.tr(),
+                            controller: _plano,
+                            plano: Plano.completo,
                           ),
                         ],
                       ),

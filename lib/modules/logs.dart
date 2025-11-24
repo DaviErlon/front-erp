@@ -12,17 +12,26 @@ class ModuloLogs extends StatefulWidget {
 
 class _ModuloLogsState extends State<ModuloLogs> {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
-  DateTime? _data = DateTime(DateTime.now().year);
+  late TextEditingController _buscaController;
+
+  DateTime? _data;
 
   @override
   void initState() {
     super.initState();
+    _buscaController = TextEditingController();
     _tipoPesquisa = ControllerGenerico(
       onPressed: () {
         setState(() {});
       },
       data: Pesquisa.nome,
     );
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,7 +63,9 @@ class _ModuloLogsState extends State<ModuloLogs> {
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          onSubmitted: (v) {
+                            setState(() {});
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise Logs",
                             hintStyle: TextStyle(
@@ -131,10 +142,11 @@ class _ModuloLogsState extends State<ModuloLogs> {
                         context: context,
                         builder: (_) => const FiltroLog(),
                       );
-
-                      setState(() {
-                        _data = filtros;
-                      });
+                      if (filtros != null) {
+                        setState(() {
+                          _data = filtros;
+                        });
+                      }
                     },
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,

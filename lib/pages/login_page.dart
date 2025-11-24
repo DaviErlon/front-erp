@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/dtos/login_dto.dart';
-import 'package:fronterp/services/login_services.dart';
+import 'package:fronterp/services/login_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fronterp/utils/utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginPage extends StatefulWidget {
+
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -14,9 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
   final ControllerGenerico<bool> _senhaOculta = ControllerGenerico(data: false);
-  final LoginService servicoLogin = LoginService();
 
-  bool _todosPreenchidos = false;
   bool _todosPreenchidos = false;
 
   @override
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             onPressed: _todosPreenchidos
                                 ? () async {
-                                    final response = await servicoLogin.login(
+                                    final response = await LoginService.login(
                                       LoginDto(
                                         email: _emailController.text,
                                         senha: _senhaController.text,

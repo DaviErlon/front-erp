@@ -1,10 +1,10 @@
 import 'item_produto_dto.dart';
 
-class TituloDto {
+class TituloDtoIn {
   String _id;
   List<ItemProdutoDto> _produtos;
 
-  TituloDto({
+  TituloDtoIn({
     required String id,
     required List<ItemProdutoDto> produtos,
   })  : _id = id,
@@ -19,8 +19,8 @@ class TituloDto {
   set produtos(List<ItemProdutoDto> valor) => _produtos = valor;
 
 
-  factory TituloDto.fromJson(Map<String, dynamic> json) {
-    return TituloDto(
+  factory TituloDtoIn.fromJson(Map<String, dynamic> json) {
+    return TituloDtoIn(
       id: json['id'],
       produtos: (json['produtos'] as List<dynamic>)
           .map((item) => ItemProdutoDto.fromJson(item))

@@ -1,0 +1,144 @@
+import 'package:dio/dio.dart';
+import 'package:fronterp/dtos/cadastro_funcionario_dto.dart';
+import 'package:fronterp/dtos/cliente_dto.dart';
+import 'package:fronterp/dtos/funcionario_dto.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/dtos/titulo_dto_out.dart';
+import 'package:fronterp/services/dio_client.dart';
+
+class CeoService {
+  static final Dio _dio = DioClient.instance;
+
+  // operações de funcionarios
+  static Future<void> addFuncionario(FuncionarioDto dto) async {
+    await _dio.post('/funcionarios', data: dto.toJson());
+  }
+
+  static Future<void> deleteFuncionario(String id) async {
+    await _dio.delete('/funcionarios/$id');
+  }
+
+  static Future<void> promoFuncionario(
+    CadastroFuncionarioDto dto,
+    String id,
+  ) async {
+    await _dio.put('/funcionarios/promo/$id');
+  }
+
+  static Future<void> setFuncionario(
+    FuncionarioDto dto,
+    String id,
+  ) async {
+    await _dio.put('/funcionarios/$id', data: dto.toJson());
+  }
+
+  static Future<PaginaDto<FuncionarioDto>> getFuncionarios({
+    String? nome,
+    String? cpf,
+    String? telefone,
+    String? tipo,
+    int pagina = 0,
+  }) async {
+    final response = await _dio.get(
+      '/funcionarios',
+      queryParameters: {
+        if (nome != null && nome.isNotEmpty) 'nome': nome,
+        if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
+        if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
+        if (tipo != null && tipo.isNotEmpty) 'tipo': tipo,
+        'pagina': pagina,
+      },
+    );
+
+    return PaginaDto<FuncionarioDto>.fromJson(
+      response.data,
+      (json) => FuncionarioDto.fromJson(json),
+    );
+  }
+
+  // operações de titulos 
+  static Future<void> aprovarTitulo(String id) async {
+    await _dio.put('/titulos/$id');
+  }
+
+  static Future<void> deleteTitulo(String id) async {
+    await _dio.delete('/titulos/$id');
+  }
+
+  static Future<PaginaDto<TituloDtoOut>> getTitulos({
+    String? nome,
+    String? cpf,
+    String? cnpj,
+    String? telefone,
+    bool? pago,
+    bool? recebido,
+    bool? aprovado,
+    int pagina = 0
+  }) async {
+    final response = await _dio.get(
+      '/titulos',
+      queryParameters: {
+        if (nome != null && nome.isNotEmpty) 'nome': nome,
+        if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
+        if (cnpj != null && cnpj.isNotEmpty) 'cnpj': cnpj,
+        if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
+        if (pago != null) 'pago': pago,
+        if (recebido != null) 'recebido': recebido,
+        if (aprovado != null) 'aprovado': aprovado,
+        'pagina': pagina,
+      },
+    );
+
+    return PaginaDto<TituloDtoOut>.fromJson(
+      response.data,
+      (json) => TituloDtoOut.fromJson(json),
+    );
+  }
+
+  static Future<PaginaDto<ClienteDto>> getClientes({
+    String? nome,
+    String? cpf,
+    String? telefone,
+    int pagina = 0
+  }) async {
+    final response = await _dio.get(
+      '/clientes',
+      queryParameters: {
+        if (nome != null && nome.isNotEmpty) 'nome': nome,
+        if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
+        if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
+        'pagina': pagina,
+      },
+    );
+
+    return PaginaDto<ClienteDto>.fromJson(
+      response.data,
+      (json) => ClienteDto.fromJson(json),
+    );
+  }
+
+  static Future<PaginaDto<ClienteDto>> getFornecedores({
+    String? nome,
+    String? cpf,
+    String? cnpj,
+    String? telefone,
+    int pagina = 0
+  }) async {
+    final response = await _dio.get(
+      '/fornecedores',
+      queryParameters: {
+        if (nome != null && nome.isNotEmpty) 'nome': nome,
+        if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
+        if (cnpj != null && cnpj.isNotEmpty) 'cnpj': cnpj,
+        if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
+        'pagina': pagina,
+      },
+    );
+
+    return PaginaDto<ClienteDto>.fromJson(
+      response.data,
+      (json) => ClienteDto.fromJson(json),
+    );
+  }
+
+}

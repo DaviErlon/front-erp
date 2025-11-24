@@ -7,8 +7,12 @@ import 'package:fronterp/pages/cadastro_page.dart';
 import 'package:fronterp/pages/login_page.dart';
 import 'package:fronterp/pages/gestor_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   final router = GoRouter(
     routes: [
       GoRoute(path: '/', builder: (context, state) => LoginPage()),
@@ -16,13 +20,27 @@ void main() {
       GoRoute(path: '/operador', builder: (context, state) => OperadorPage()),
       GoRoute(path: '/gestor', builder: (context, state) => GestorPage()),
       GoRoute(path: '/ceo', builder: (context, state) => CeoPage()),
-      GoRoute(path: '/almoxarife', builder: (context, state) => AlmoxarifePage()),
+      GoRoute(
+        path: '/almoxarife',
+        builder: (context, state) => AlmoxarifePage(),
+      ),
       GoRoute(path: '/financeiro', builder: (context, state) => Center()),
       GoRoute(path: '/tesoureiro', builder: (context, state) => Center()),
     ],
   );
 
-  runApp(MyApp(router: router));
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+        Locale('en', 'US'),
+        Locale('en', 'ES'),
+      ],
+      path: '/translations',
+      fallbackLocale: const Locale('pt', 'BR'),
+      child: MyApp(router: router),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,6 +53,9 @@ class MyApp extends StatelessWidget {
       title: 'NEXOS PRISMA ERP',
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -44,8 +65,14 @@ class MyApp extends StatelessWidget {
             fontSize: 36,
             fontWeight: FontWeight.w600,
           ),
-          labelLarge: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400),
-          labelMedium: GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.w400),
+          labelLarge: GoogleFonts.roboto(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          labelMedium: GoogleFonts.roboto(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
         ),
 
         elevatedButtonTheme: ElevatedButtonThemeData(

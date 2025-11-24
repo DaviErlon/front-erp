@@ -3,13 +3,10 @@ class PaginaDto<T> {
   int _pagina;
   int _tamanho;
 
-  PaginaDto({
-    required List<T> dados,
-    required int pagina,
-    required int tamanho,
-  })  : _dados = dados,
-        _pagina = pagina,
-        _tamanho = tamanho;
+  PaginaDto({required List<T> dados, required int pagina, required int tamanho})
+    : _dados = dados,
+      _pagina = pagina,
+      _tamanho = tamanho;
 
   // Getters
   List<T> get dados => _dados;
@@ -32,13 +29,5 @@ class PaginaDto<T> {
       pagina: json['pagina'] as int,
       tamanho: json['tamanho'] as int,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'dados': _dados,
-      'pagina': _pagina,
-      'tamanho': _tamanho,
-    };
   }
 }
