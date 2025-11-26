@@ -12,7 +12,7 @@ class DataStorage {
     await prefs.setString(keyToken, token);
     await prefs.setString(keyNome, nome);
     await prefs.setString(keyPlano, plano);
-    await prefs.setString(keyToken, token);
+    await prefs.setString(keyTipo, tipo);
   }
   
   static Future<String?> carregarToken() async {

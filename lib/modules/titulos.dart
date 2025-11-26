@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_filtro.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/dtos/titulo_dto_out.dart';
+import 'package:fronterp/services/ceo_service.dart';
+import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
 import 'package:fronterp/components/filtro_dialog_titulos.dart';
+import 'package:fronterp/components/linha_titulo.dart';
+import 'package:dio/dio.dart';
 
 class ModuloTitulos extends StatefulWidget {
   const ModuloTitulos({super.key});
@@ -10,9 +16,10 @@ class ModuloTitulos extends StatefulWidget {
   State<ModuloTitulos> createState() => _ModuloTitulosState();
 }
 
-class _ModuloTitulosState extends State<ModuloTitulos> {
+class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
   late ControllerDialogTitulos _filtroTitulos;
+  PaginaDto<TituloDtoOut>? _titulos;
 
   @override
   void initState() {
@@ -24,6 +31,32 @@ class _ModuloTitulosState extends State<ModuloTitulos> {
       data: Pesquisa.nome,
     );
     _filtroTitulos = ControllerDialogTitulos();
+
+    _carregarTitulos();
+  }
+
+  Future<void> _carregarTitulos() async {
+    try {
+      await DataStorage.carregarToken();
+      final dados = await CeoService.getTitulos();
+
+      setState(() {
+        _titulos = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      if (dioErr.response?.statusCode == 401) {
+        doLogout(context);
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err, _) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
   }
 
   @override
@@ -85,7 +118,9 @@ class _ModuloTitulosState extends State<ModuloTitulos> {
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {});
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,
@@ -115,7 +150,7 @@ class _ModuloTitulosState extends State<ModuloTitulos> {
                       ...{
                         'cpf': Pesquisa.cpf,
                         'nome': Pesquisa.nome,
-                        'cnpj': Pesquisa.cpnj,
+                        'cnpj': Pesquisa.cnpj,
                         'telefone': Pesquisa.telefone,
                       }.entries.map((entry) {
                         return BotaoFiltro(
@@ -135,7 +170,7 @@ class _ModuloTitulosState extends State<ModuloTitulos> {
                       );
 
                       if (filtros != null) {
-                        setState((){
+                        setState(() {
                           _filtroTitulos.updateFromMap(filtros);
                         });
                       }
@@ -160,15 +195,26 @@ class _ModuloTitulosState extends State<ModuloTitulos> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 340,
                 width: 970,
-                child: Container(
-                  color: Colors.black
-                ),
+                child: _titulos == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _titulos!.dados.length,
+                          itemBuilder: (context, index) {
+                            final titulo = _titulos!.dados[index];
+                            return LinhaTitulo(
+                              titulo: titulo,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/dtos/produto_dto.dart';
 import 'package:fronterp/utils/utils.dart';
 import 'package:fronterp/components/filtro_dialog_produtos.dart';
+import 'package:fronterp/components/linha_produto.dart';
+import 'package:fronterp/services/data_storage.dart';
+import 'package:fronterp/services/ceo_service.dart';
+import 'package:dio/dio.dart';
 
 class ModuloProdutosConsulta extends StatefulWidget {
   const ModuloProdutosConsulta({super.key});
@@ -9,13 +15,41 @@ class ModuloProdutosConsulta extends StatefulWidget {
   State<ModuloProdutosConsulta> createState() => _ModuloProdutosConsultaState();
 }
 
-class _ModuloProdutosConsultaState extends State<ModuloProdutosConsulta> {
+class _ModuloProdutosConsultaState extends State<ModuloProdutosConsulta>
+    with LogoutMixin {
   late ControllerDialogProdutos _filtrosProdutos;
+  PaginaDto<ProdutoDto>? _produtos;
 
   @override
   void initState() {
     super.initState();
     _filtrosProdutos = ControllerDialogProdutos();
+
+    _carregarProdutos();
+  }
+
+  Future<void> _carregarProdutos() async {
+    try {
+      await DataStorage.carregarToken();
+      final dados = await CeoService.getProdutos();
+
+      setState(() {
+        _produtos = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      if (dioErr.response?.statusCode == 401) {
+        doLogout(context);
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err, _) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
   }
 
   @override
@@ -130,6 +164,27 @@ class _ModuloProdutosConsultaState extends State<ModuloProdutosConsulta> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 340,
+                width: 970,
+                child: _produtos == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _produtos!.dados.length,
+                          itemBuilder: (context, index) {
+                            final produto = _produtos!.dados[index];
+                            return LinhaProduto(
+                              produto: produto,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),

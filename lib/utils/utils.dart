@@ -1,3 +1,9 @@
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import '../auth/auth_state.dart';
+
 class ControllerGenerico<T> {
   final void Function()? onPressed;
 
@@ -81,8 +87,16 @@ class ControllerDialogProdutos {
   }
 }
 
+mixin LogoutMixin {
+  Future<void> doLogout(BuildContext context) async {
+    await context.read<AuthState>().logout();
+    context.go('/');
+  }
+}
+
+
 enum Funcionario { ceo, gestor, operador, almoxarife, financeiro, tesoureiro}
 
 enum Plano { basico, intermediario, completo, nenhum }
 
-enum Pesquisa { cpf, cpnj, nome, telefone }
+enum Pesquisa { cpf, cnpj, nome, telefone }

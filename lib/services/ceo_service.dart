@@ -11,35 +11,38 @@ import 'package:fronterp/services/dio_client.dart';
 
 class CeoService {
   static final Dio _dio = DioClient.instance;
+  static const String s = '/ceo';
 
   // -------------------- PRODUTOS --------------------
 
   static Future<void> addProduto(ProdutoDto dto) async {
-    await _dio.post('/produtos', data: dto.toJson());
+    await _dio.post('$s/produtos', data: dto.toJson());
   }
 
-  static Future<void> deleteProduto(String id) async {
-    await _dio.delete('/produtos/$id');
+  static Future<void> delProduto(String id) async {
+    await _dio.delete('$s/produtos/$id');
   }
 
   static Future<void> setProduto(ProdutoDto dto, String id) async {
-    await _dio.put('/produtos/$id', data: dto.toJson());
+    await _dio.put('$s/produtos/$id', data: dto.toJson());
   }
 
   static Future<PaginaDto<ProdutoDto>> getProdutos({
     String? nome,
-    bool? semEstoqueFisico,
+    bool? semEstoque,
     bool? comEstoquePendente,
     bool? comEstoqueReservado,
     int pagina = 0,
   }) async {
     final response = await _dio.get(
-      '/produtos',
+      '$s/produtos',
       queryParameters: {
         if (nome != null && nome.isNotEmpty) 'nome': nome,
-        if (semEstoqueFisico != null) 'semEstoqueFisico': semEstoqueFisico,
-        if (comEstoquePendente != null) 'comEstoquePendente': comEstoquePendente,
-        if (comEstoqueReservado != null) 'comEstoqueReservado': comEstoqueReservado,
+        if (semEstoque != null) 'semEstoque': semEstoque,
+        if (comEstoquePendente != null)
+          'comEstoquePendente': comEstoquePendente,
+        if (comEstoqueReservado != null)
+          'comEstoqueReservado': comEstoqueReservado,
         'pagina': pagina,
       },
     );
@@ -53,22 +56,22 @@ class CeoService {
   // -------------------- FUNCIONÁRIOS --------------------
 
   static Future<void> addFuncionario(FuncionarioDto dto) async {
-    await _dio.post('/funcionarios', data: dto.toJson());
+    await _dio.post('$s/funcionarios', data: dto.toJson());
   }
 
-  static Future<void> deleteFuncionario(String id) async {
-    await _dio.delete('/funcionarios/$id');
+  static Future<void> delFuncionario(String id) async {
+    await _dio.delete('$s/funcionarios/$id');
   }
 
   static Future<void> setFuncionario(FuncionarioDto dto, String id) async {
-    await _dio.put('/funcionarios/$id', data: dto.toJson());
+    await _dio.put('$s/funcionarios/$id', data: dto.toJson());
   }
 
   static Future<void> promoFuncionario(
     CadastroFuncionarioDto dto,
     String id,
   ) async {
-    await _dio.put('/funcionarios/promo/$id', data: dto.toJson());
+    await _dio.put('$s/funcionarios/promo/$id', data: dto.toJson());
   }
 
   static Future<PaginaDto<FuncionarioDto>> getFuncionarios({
@@ -79,7 +82,7 @@ class CeoService {
     int pagina = 0,
   }) async {
     final response = await _dio.get(
-      '/funcionarios',
+      '$s/funcionarios',
       queryParameters: {
         if (nome != null && nome.isNotEmpty) 'nome': nome,
         if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
@@ -98,11 +101,11 @@ class CeoService {
   // -------------------- TÍTULOS --------------------
 
   static Future<void> aprovarTitulo(String id) async {
-    await _dio.put('/titulos/$id');
+    await _dio.put('$s/titulos/$id');
   }
 
-  static Future<void> deleteTitulo(String id) async {
-    await _dio.delete('/titulos/$id');
+  static Future<void> delTitulo(String id) async {
+    await _dio.delete('$s/titulos/$id');
   }
 
   static Future<PaginaDto<TituloDtoOut>> getTitulos({
@@ -115,30 +118,33 @@ class CeoService {
     bool? aprovado,
     int pagina = 0,
   }) async {
-    final response = await _dio.get(
-      '/titulos',
-      queryParameters: {
-        if (nome != null && nome.isNotEmpty) 'nome': nome,
-        if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
-        if (cnpj != null && cnpj.isNotEmpty) 'cnpj': cnpj,
-        if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
-        if (pago != null) 'pago': pago,
-        if (recebido != null) 'recebido': recebido,
-        if (aprovado != null) 'aprovado': aprovado,
-        'pagina': pagina,
-      },
-    );
-
-    return PaginaDto<TituloDtoOut>.fromJson(
-      response.data,
-      (json) => TituloDtoOut.fromJson(json),
-    );
+    try {
+      final response = await _dio.get(
+        '$s/titulos',
+        queryParameters: {
+          if (nome != null && nome.isNotEmpty) 'nome': nome,
+          if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
+          if (cnpj != null && cnpj.isNotEmpty) 'cnpj': cnpj,
+          if (telefone != null && telefone.isNotEmpty) 'telefone': telefone,
+          if (pago != null) 'pago': pago,
+          if (recebido != null) 'recebido': recebido,
+          if (aprovado != null) 'aprovado': aprovado,
+          'pagina': pagina,
+        },
+      );
+      return PaginaDto<TituloDtoOut>.fromJson(
+        response.data,
+        (json) => TituloDtoOut.fromJson(json),
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // -------------------- CLIENTES --------------------
 
   static Future<void> addCliente(ClienteDto dto) async {
-    await _dio.post('/clientes', data: dto.toJson());
+    await _dio.post('$s/clientes', data: dto.toJson());
   }
 
   static Future<PaginaDto<ClienteDto>> getClientes({
@@ -148,7 +154,7 @@ class CeoService {
     int pagina = 0,
   }) async {
     final response = await _dio.get(
-      '/clientes',
+      '$s/clientes',
       queryParameters: {
         if (nome != null && nome.isNotEmpty) 'nome': nome,
         if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
@@ -166,7 +172,7 @@ class CeoService {
   // -------------------- FORNECEDORES --------------------
 
   static Future<void> addFornecedor(FornecedorDto dto) async {
-    await _dio.post('/fornecedores', data: dto.toJson());
+    await _dio.post('$s/fornecedores', data: dto.toJson());
   }
 
   static Future<PaginaDto<FornecedorDto>> getFornecedores({
@@ -177,7 +183,7 @@ class CeoService {
     int pagina = 0,
   }) async {
     final response = await _dio.get(
-      '/fornecedores',
+      '$s/fornecedores',
       queryParameters: {
         if (nome != null && nome.isNotEmpty) 'nome': nome,
         if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,
@@ -205,7 +211,7 @@ class CeoService {
     int pagina = 0,
   }) async {
     final response = await _dio.get(
-      '/logs',
+      '$s/logs',
       queryParameters: {
         if (nome != null && nome.isNotEmpty) 'nome': nome,
         if (cpf != null && cpf.isNotEmpty) 'cpf': cpf,

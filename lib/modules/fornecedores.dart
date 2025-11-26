@@ -111,7 +111,7 @@ class _ModuloFornecedoresConsultaState extends State<ModuloFornecedoresConsulta>
                     children: [
                       ...{
                         'cpf': Pesquisa.cpf,
-                        'cnpj': Pesquisa.cpnj,
+                        'cnpj': Pesquisa.cnpj,
                         'nome': Pesquisa.nome,
                         'telefone': Pesquisa.telefone,
                       }.entries.map((entry) {

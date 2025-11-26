@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fronterp/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 
-class MoldeTela extends StatelessWidget {
+class MoldeTela extends StatelessWidget with LogoutMixin {
   final Widget body;
   final Widget sideBar;
 
@@ -49,9 +49,7 @@ class MoldeTela extends StatelessWidget {
                     width: 80,
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: () {
-                        context.go('/');
-                      },
+                      onPressed: () => doLogout(context),
                       style: Theme.of(context).elevatedButtonTheme.style
                           ?.copyWith(
                             backgroundColor: WidgetStatePropertyAll(

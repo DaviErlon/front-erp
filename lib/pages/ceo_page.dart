@@ -8,7 +8,7 @@ import 'package:fronterp/utils/utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fronterp/modules/titulos.dart';
 import 'package:fronterp/modules/funcionarios.dart';
-import 'package:fronterp/modules/clientes.dart';
+import 'package:fronterp/modules/produtos.dart';
 
 class CeoPage extends StatefulWidget {
   const CeoPage({super.key});
@@ -61,7 +61,7 @@ class _CeoPageState extends State<CeoPage> {
         children: [
           ModuloTitulos(),
           ModuloFuncionario(),
-          ModuloClientesConsulta(),
+          ModuloProdutosConsulta(),
           ModuloFornecedoresConsulta(),
           ModuloProdutosConsulta(),
           ModuloLogs(),

@@ -68,7 +68,7 @@ class LogAuditoriaDto {
   factory LogAuditoriaDto.fromJson(Map<String, dynamic> json) {
     return LogAuditoriaDto(
       id: json['id'],
-      idEmissor: json['idEmissor'],
+      idEmissor: json['emissor']?['id'] ?? '',
       nome: json['nome'],
       cpf: json['cpf'],
       email: json['email'],
@@ -78,7 +78,7 @@ class LogAuditoriaDto {
       entidade: json['entidade'],
       entidadeId: json['entidadeId'],
       detalhes: json['detalhes'],
-      data: DateTime.parse(json['data']),
+      data: DateTime.parse(json['criadoEm']),
     );
   }
 

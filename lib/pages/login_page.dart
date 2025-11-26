@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/dtos/login_dto.dart';
 import 'package:fronterp/services/login_service.dart';
+import 'package:fronterp/auth/auth_state.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fronterp/utils/utils.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:fronterp/utils/utils.dart';
 
 class LoginPage extends StatefulWidget {
-
   const LoginPage({super.key});
 
   @override
@@ -40,13 +41,50 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _realizarLogin() async {
+    if (!_todosPreenchidos) return;
+
+    try {
+      final dto = LoginDto(
+        email: _emailController.text,
+        senha: _senhaController.text,
+      );
+
+      final response = await LoginService.login(dto);
+
+      final auth = context.read<AuthState>();
+      await auth.login(
+        token: response.token,
+        tipo: response.tipo,
+        nome: response.nome,
+        plano: response.plano,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('auth.login.success'.tr()),
+        ),
+      );
+
+      context.go('/${auth.tipo}');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('auth.login.error'.tr()),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       body: Center(
         child: Padding(
-          padding: EdgeInsetsGeometry.only(bottom: 40),
+          padding: const EdgeInsets.only(bottom: 40),
           child: SizedBox(
             width: 360,
             height: 420,
@@ -57,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               color: Colors.white,
               child: Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 14,
@@ -66,7 +104,10 @@ class _LoginPageState extends State<LoginPage> {
                       'auth.login.title'.tr(),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
+
                     const SizedBox(height: 20),
+
+                    // EMAIL
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -74,6 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: 'auth.login.email_hint'.tr(),
                       ),
                     ),
+
+                    // SENHA
                     TextField(
                       controller: _senhaController,
                       obscureText: !_senhaOculta.data,
@@ -96,45 +139,26 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
+
+                    // BOTÃO LOGIN
                     Padding(
-                      padding: EdgeInsetsGeometry.only(top: 14, bottom: 6),
+                      padding: const EdgeInsets.only(top: 14, bottom: 6),
                       child: SizedBox(
                         width: 88,
                         height: 40,
                         child: Opacity(
                           opacity: _todosPreenchidos ? 1 : 0.8,
                           child: ElevatedButton(
-                            onPressed: _todosPreenchidos
-                                ? () async {
-                                    final response = await LoginService.login(
-                                      LoginDto(
-                                        email: _emailController.text,
-                                        senha: _senhaController.text,
-                                      ),
-                                    );
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'auth.login.snackbar_all_filled'.tr(),
-                                        ),
-                                      ),
-                                    );
-
-                                    if (!mounted) return;
-
-                                    context.go('/ceo');
-                                  }
-                                : null, // desativa o botão
+                            onPressed: _todosPreenchidos ? _realizarLogin : null,
                             child: Text('auth.login.submit'.tr()),
                           ),
                         ),
                       ),
                     ),
+
+                    // LINK CADASTRO
                     InkWell(
-                      onTap: () {
-                        context.go('/cadastro');
-                      },
+                      onTap: () => context.go('/cadastro'),
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -145,8 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             TextSpan(
                               text: 'auth.login.signup'.tr(),
-                              style: Theme.of(context).textTheme.labelLarge!
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.labelLarge!.copyWith(
                                     decoration: TextDecoration.underline,
                                   ),
                             ),
