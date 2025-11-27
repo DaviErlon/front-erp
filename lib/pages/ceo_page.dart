@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_sidebar.dart';
 import 'package:fronterp/components/molde_tela.dart';
+import 'package:fronterp/modules/clientes.dart';
 import 'package:fronterp/modules/fornecedores.dart';
 import 'package:fronterp/modules/logs.dart';
 import 'package:fronterp/modules/produtos.dart';
@@ -60,11 +61,9 @@ class _CeoPageState extends State<CeoPage> {
         index: _modulo.data,
         children: [
           ModuloTitulos(),
-          ModuloFuncionario(),
-          ModuloProdutosConsulta(),
-          ModuloFornecedoresConsulta(),
-          ModuloProdutosConsulta(),
-          ModuloLogs(),
+          ModuloFornecedores(),
+          ModuloProdutos(),
+          ModuloClientes(),
         ],
       ),
     );

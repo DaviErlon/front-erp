@@ -1,16 +1,43 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_filtro.dart';
+import 'package:fronterp/components/linha_cliente.dart';
+import 'package:fronterp/dtos/cliente_dto.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/services/ceo_service.dart';
+import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
 
-class ModuloClientesConsulta extends StatefulWidget {
-  const ModuloClientesConsulta({super.key});
+class ModuloClientes extends StatefulWidget {
+  const ModuloClientes({super.key});
 
   @override
-  State<ModuloClientesConsulta> createState() => _ModuloClientesConsultaState();
+  State<ModuloClientes> createState() => _ModuloClientesState();
 }
 
-class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
+class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
+  PaginaDto<ClienteDto>? _clientes;
+
+  Future<void> _carregarClientes() async {
+    try {
+      await DataStorage.carregarToken();
+      final dados = await CeoService.getClientes();
+
+      setState(() {
+        _clientes = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      doLogout(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err, _) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
+  }
 
   @override
   void initState() {
@@ -21,6 +48,7 @@ class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
       },
       data: Pesquisa.nome,
     );
+    _carregarClientes();
   }
 
   @override
@@ -123,6 +151,28 @@ class _ModuloClientesConsultaState extends State<ModuloClientesConsulta> {
                     ],
                   ),
                 ],
+              ),
+
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 340,
+                width: 970,
+                child: _clientes == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _clientes!.dados.length,
+                          itemBuilder: (context, index) {
+                            final cliente = _clientes!.dados[index];
+                            return LinhaCliente(
+                              cliente: cliente,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),

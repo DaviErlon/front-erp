@@ -8,14 +8,14 @@ import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/services/ceo_service.dart';
 import 'package:dio/dio.dart';
 
-class ModuloProdutosConsulta extends StatefulWidget {
-  const ModuloProdutosConsulta({super.key});
+class ModuloProdutos extends StatefulWidget {
+  const ModuloProdutos({super.key});
 
   @override
-  State<ModuloProdutosConsulta> createState() => _ModuloProdutosConsultaState();
+  State<ModuloProdutos> createState() => _ModuloProdutosState();
 }
 
-class _ModuloProdutosConsultaState extends State<ModuloProdutosConsulta>
+class _ModuloProdutosState extends State<ModuloProdutos>
     with LogoutMixin {
   late ControllerDialogProdutos _filtrosProdutos;
   PaginaDto<ProdutoDto>? _produtos;
@@ -37,11 +37,7 @@ class _ModuloProdutosConsultaState extends State<ModuloProdutosConsulta>
         _produtos = dados;
       });
     } on DioException catch (dioErr, _) {
-      if (dioErr.response?.statusCode == 401) {
-        doLogout(context);
-        return;
-      }
-
+      doLogout(context);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));

@@ -1,16 +1,47 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botao_filtro.dart';
+import 'package:fronterp/components/linha_fornecedor.dart';
+import 'package:fronterp/dtos/fornecedor_dto.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/services/ceo_service.dart';
+import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
 
-class ModuloFornecedoresConsulta extends StatefulWidget {
-  const ModuloFornecedoresConsulta({super.key});
+class ModuloFornecedores extends StatefulWidget {
+  const ModuloFornecedores({super.key});
 
   @override
-  State<ModuloFornecedoresConsulta> createState() => _ModuloFornecedoresConsultaState();
+  State<ModuloFornecedores> createState() =>
+      _ModuloFornecedoresState();
 }
 
-class _ModuloFornecedoresConsultaState extends State<ModuloFornecedoresConsulta> {
+class _ModuloFornecedoresState extends State<ModuloFornecedores>
+    with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
+
+  PaginaDto<FornecedorDto>? _fornecedores;
+
+  Future<void> _carregarFornecedores() async {
+    try {
+      await DataStorage.carregarToken();
+      final dados = await CeoService.getFornecedores();
+
+      setState(() {
+        _fornecedores = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      
+      doLogout(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err, _) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
+  }
 
   @override
   void initState() {
@@ -21,6 +52,8 @@ class _ModuloFornecedoresConsultaState extends State<ModuloFornecedoresConsulta>
       },
       data: Pesquisa.nome,
     );
+
+    _carregarFornecedores();
   }
 
   @override
@@ -124,6 +157,28 @@ class _ModuloFornecedoresConsultaState extends State<ModuloFornecedoresConsulta>
                     ],
                   ),
                 ],
+              ),
+
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 340,
+                width: 970,
+                child: _fornecedores == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _fornecedores!.dados.length,
+                          itemBuilder: (context, index) {
+                            final fornecedor = _fornecedores!.dados[index];
+                            return LinhaFornecedor(
+                              fornecedor: fornecedor,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),

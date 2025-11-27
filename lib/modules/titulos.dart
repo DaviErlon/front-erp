@@ -44,11 +44,7 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
         _titulos = dados;
       });
     } on DioException catch (dioErr, _) {
-      if (dioErr.response?.statusCode == 401) {
-        doLogout(context);
-        return;
-      }
-
+      doLogout(context);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));
