@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_sidebar.dart';
+import 'package:fronterp/components/botoes/botao_sidebar.dart';
 import 'package:fronterp/components/molde_tela.dart';
 import 'package:fronterp/utils/utils.dart';
 import 'package:easy_localization/easy_localization.dart';

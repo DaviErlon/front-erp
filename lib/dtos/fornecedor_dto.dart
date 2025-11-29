@@ -7,8 +7,8 @@ class FornecedorDto {
 
   FornecedorDto({
     String id = '',
-    required String cpf,
-    required String cnpj,
+    String cpf = '',
+    String cnpj = '',
     required String telefone,
     required String nome,
   }) :_id = id,
@@ -34,8 +34,8 @@ class FornecedorDto {
     
   factory FornecedorDto.fromJson(Map<String, dynamic> json) {
     return FornecedorDto(
-      cpf: json['cpf'],
-      cnpj: json['cnpj'],
+      cpf: json['cpf'] ?? '',
+      cnpj: json['cnpj'] ?? '',
       telefone: json['telefone'],
       nome: json['nome'],
     );
@@ -43,8 +43,8 @@ class FornecedorDto {
 
   Map<String, dynamic> toJson(){
     return{
-      'cpf': _cpf,
-      'cnpj': _cnpj,
+      if(_cpf.isNotEmpty) 'cpf': _cpf,
+      if(_cnpj.isNotEmpty) 'cnpj': _cnpj,
       'telefone': _telefone,
       'nome': _nome,
     };

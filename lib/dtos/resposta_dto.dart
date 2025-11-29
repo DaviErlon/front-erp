@@ -38,15 +38,6 @@ class RespostaDto {
       nome: json['nome'],
     );
   }
-
-  Map<String, dynamic> toJson(){
-    return{
-      'token': _token,
-      'tipo': _tipo,
-      'plano': _plano,
-      'nome': _nome,
-    };
-  }
 }
 
 

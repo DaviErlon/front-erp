@@ -55,7 +55,7 @@
     "sidebar": {
       "titles": "Títulos",
       "employees": "Funcionários",
-      "queries": "Consultas",
+      "queries": "Consultas", 
       "logs": "Registros"
     }
   },

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/dtos/fornecedor_dto.dart';
+import 'package:fronterp/dtos/produto_dto.dart';
 
-class LinhaFornecedor extends StatelessWidget {
-  final FornecedorDto fornecedor;
+class LinhaProduto extends StatelessWidget {
+  final ProdutoDto produto;
   final bool isEven;
   final VoidCallback? onTap;
 
-  const LinhaFornecedor({
+  const LinhaProduto({
     super.key,
-    required this.fornecedor,
+    required this.produto,
     required this.isEven,
     this.onTap,
   });
@@ -28,25 +28,43 @@ class LinhaFornecedor extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 280,
+              width: 400,
               child: Center(
-                child: Text(fornecedor.nome, style: const TextStyle(fontSize: 14)),
+                child: Text(produto.nome, style: const TextStyle(fontSize: 14)),
               ),
             ),
             SizedBox(
-              width: 240,
+              width: 120,
               child: Center(
                 child: Text(
-                  fornecedor.cnpj.isEmpty ? fornecedor.cpf : fornecedor.cnpj,
+                  "R\$ ${produto.preco.toStringAsFixed(2)}",
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
             SizedBox(
-              width: 200,
+              width: 70,
               child: Center(
                 child: Text(
-                  fornecedor.telefone,
+                  ("${produto.estoqueDisponivel}"),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 70,
+              child: Center(
+                child: Text(
+                  ("${produto.estoqueReservado}"),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 70,
+              child: Center(
+                child: Text(
+                  ("${produto.estoquePendente}"),
                   style: const TextStyle(fontSize: 14),
                 ),
               ),

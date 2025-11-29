@@ -16,10 +16,6 @@ class LoginDto {
   String get email => _email;
   String get senha => _senha;
 
-  factory LoginDto.fromJson(Map<String, dynamic> json) {
-    return LoginDto(email: json['email'], senha: json['senha']);
-  }
-
   Map<String, dynamic> toJson() {
     return {'email': _email, 'senha': _senha};
   }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/dtos/cliente_dto.dart';
+import 'package:fronterp/dtos/funcionario_dto.dart';
 
-class LinhaCliente extends StatelessWidget {
-  final ClienteDto cliente;
+class LinhaFuncionario extends StatelessWidget {
+  final FuncionarioDto funcionario;
   final bool isEven;
   final VoidCallback? onTap;
 
-  const LinhaCliente({
+  const LinhaFuncionario({
     super.key,
-    required this.cliente,
+    required this.funcionario,
     required this.isEven,
     this.onTap,
   });
@@ -25,33 +25,39 @@ class LinhaCliente extends StatelessWidget {
         decoration: BoxDecoration(color: background),
         child: Row(
           spacing: 30,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 300,
+              width: 80,
               child: Center(
-                child: Text(cliente.nome, style: const TextStyle(fontSize: 14)),
+                child: Text(funcionario.tipo.isEmpty ? 'Não especializado' : funcionario.tipo, style: const TextStyle(fontSize: 14)),
               ),
             ),
             SizedBox(
-              width: 300,
+              width: 360,
+              child: Center(
+                child: Text(funcionario.nome, style: const TextStyle(fontSize: 14)),
+              ),
+            ),
+            SizedBox(
+              width: 120,
               child: Center(
                 child: Text(
-                  cliente.telefone,
+                  funcionario.cpf,
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
             SizedBox(
-              width: 200,
+              width: 120,
               child: Center(
                 child: Text(
-                  cliente.cpf,
+                  funcionario.telefone.isEmpty ? 'Sem telefone' : funcionario.telefone,
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
-            ],
+          ],
         ),
       ),
     );

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/filtro_dialog.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FiltroLog extends StatefulWidget {
   const FiltroLog({super.key});
-
   @override
   State<FiltroLog> createState() => _FiltroLogState();
 }
@@ -17,18 +16,13 @@ class _FiltroLogState extends State<FiltroLog> {
     return FiltrosDialog(
       maxWidth: 480,
       children: [
-        // TÍTULO
         Text(
           "Selecionar Data e Hora",
-          style: GoogleFonts.inter(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600),
         ),
-
         const SizedBox(height: 20),
 
-        // CALENDÁRIO CUSTOMIZADO
+        // Calendário
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -53,16 +47,13 @@ class _FiltroLogState extends State<FiltroLog> {
             },
           ),
         ),
-
         const SizedBox(height: 20),
-        
+
+        // Exibe hora atual
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Hora selecionada:",
-              style: GoogleFonts.inter(fontSize: 16),
-            ),
+            Text("Hora selecionada:", style: GoogleFonts.inter(fontSize: 16)),
             Text(
               "${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
               style: GoogleFonts.inter(
@@ -73,10 +64,9 @@ class _FiltroLogState extends State<FiltroLog> {
             ),
           ],
         ),
-
         const SizedBox(height: 10),
 
-        // BOTÃO DE SELECIONAR HORA ESTILIZADO
+        // Botão para abrir TimePicker custom
         ElevatedButton.icon(
           icon: const Icon(Icons.schedule),
           label: const Text("Selecionar Hora"),
@@ -90,7 +80,6 @@ class _FiltroLogState extends State<FiltroLog> {
           ),
           onPressed: () async {
             final time = await showCustomTimePicker(context);
-
             if (time != null) {
               setState(() {
                 selectedDate = DateTime(
@@ -112,7 +101,9 @@ class _FiltroLogState extends State<FiltroLog> {
   }
 }
 
-// showDialog Customizado para selecionar a hora de forma mais facil pela web
+// ============================
+// TIME PICKER CUSTOMIZADO
+// ============================
 
 Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
   return showDialog<TimeOfDay>(
@@ -122,35 +113,35 @@ Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
 
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        contentPadding: EdgeInsets.all(20),
+        contentPadding: const EdgeInsets.all(20),
         content: StatefulBuilder(
           builder: (context, setState) {
-            bool isPM = selected.period == DayPeriod.pm;
-
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // HORAS E MINUTOS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _numberSelector(
-                      initial: selected.hourOfPeriod,
-                      max: 12,
+                      initial: selected.hour,
+                      max: 23,
                       onChanged: (v) {
                         setState(() {
                           selected = TimeOfDay(
-                            hour: (isPM ? 12 : 0) + v % 12,
+                            hour: v,
                             minute: selected.minute,
                           );
                         });
                       },
                     ),
-
-                    Text(
+                    const Text(
                       ":",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-
                     _numberSelector(
                       initial: selected.minute,
                       max: 59,
@@ -165,52 +156,18 @@ Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
                     ),
                   ],
                 ),
-
-                SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _amPmButton(
-                      label: "AM",
-                      selected: !isPM,
-                      onTap: () {
-                        setState(() {
-                          isPM = false;
-                          selected = TimeOfDay(
-                            hour: selected.hour % 12,
-                            minute: selected.minute,
-                          );
-                        });
-                      },
-                    ),
-                    SizedBox(width: 8),
-                    _amPmButton(
-                      label: "PM",
-                      selected: isPM,
-                      onTap: () {
-                        setState(() {
-                          isPM = true;
-                          selected = TimeOfDay(
-                            hour: (selected.hour % 12) + 12,
-                            minute: selected.minute,
-                          );
-                        });
-                      },
-                    ),
-                  ],
-                ),
               ],
             );
           },
         ),
+
         actions: [
           TextButton(
-            child: Text("Cancelar"),
+            child: const Text("Cancelar"),
             onPressed: () => Navigator.pop(context),
           ),
           TextButton(
-            child: Text("OK"),
+            child: const Text("OK"),
             onPressed: () => Navigator.pop(context, selected),
           ),
         ],
@@ -219,30 +176,9 @@ Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
   );
 }
 
-Widget _amPmButton({
-  required String label,
-  required bool selected,
-  required VoidCallback onTap,
-}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-      decoration: BoxDecoration(
-        color: selected ? Colors.deepPurple : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: selected ? Colors.white : Colors.black,
-        ),
-      ),
-    ),
-  );
-}
+// ============================
+// Widgets auxiliares
+// ============================
 
 Widget _numberSelector({
   required int initial,
@@ -251,32 +187,36 @@ Widget _numberSelector({
 }) {
   int value = initial;
 
-  return StatefulBuilder(builder: (context, setState) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.arrow_drop_up, size: 30),
-          onPressed: () {
-            setState(() {
-              value = (value + 1) % (max + 1);
-              onChanged(value);
-            });
-          },
-        ),
-        Text(
-          value.toString().padLeft(2, '0'),
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        IconButton(
-          icon: Icon(Icons.arrow_drop_down, size: 30),
-          onPressed: () {
-            setState(() {
-              value = (value - 1) < 0 ? max : value - 1;
-              onChanged(value);
-            });
-          },
-        ),
-      ],
-    );
-  });
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return Column(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_drop_up, size: 30),
+            onPressed: () {
+              setState(() {
+                value = (value + 1) % (max + 1);
+                onChanged(value);
+              });
+            },
+          ),
+
+          Text(
+            value.toString().padLeft(2, '0'),
+            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.arrow_drop_down, size: 30),
+            onPressed: () {
+              setState(() {
+                value = (value - 1) < 0 ? max : value - 1;
+                onChanged(value);
+              });
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

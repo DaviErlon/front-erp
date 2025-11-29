@@ -1,6 +1,8 @@
+import 'package:fronterp/dtos/funcionario_dto.dart';
+
 class LogAuditoriaDto {
   String _id;
-  String _idEmissor;
+  FuncionarioDto _emissor;
   String _nome;
   String _cpf;
   String _email;
@@ -10,13 +12,13 @@ class LogAuditoriaDto {
   String _entidade;
   String _entidadeId;
   String _detalhes;
-  DateTime? data;
+  String _data;
   DateTime? inicio;
   DateTime? fim;
 
   LogAuditoriaDto({
     String id = '',
-    String idEmissor = '',
+    required FuncionarioDto emissor,
     required String nome,
     required String cpf,
     String email = '',
@@ -26,23 +28,24 @@ class LogAuditoriaDto {
     String entidade = '',
     String entidadeId = '',
     String detalhes = '',
-    this.data,
+    String data = '',
     this.inicio,
     this.fim,
-  })  : _id = id,
-        _idEmissor = idEmissor,
-        _nome = nome,
-        _cpf = cpf,
-        _email = email,
-        _telefone = telefone,
-        _setor = setor,
-        _acao = acao,
-        _entidade = entidade,
-        _entidadeId = entidadeId,
-        _detalhes = detalhes;
+  }) : _id = id,
+       _emissor = emissor,
+       _nome = nome,
+       _cpf = cpf,
+       _email = email,
+       _telefone = telefone,
+       _setor = setor,
+       _acao = acao,
+       _entidade = entidade,
+       _entidadeId = entidadeId,
+       _data = data,
+       _detalhes = detalhes;
 
   String get id => _id;
-  String get idEmissor => _idEmissor;
+  FuncionarioDto get emissor => _emissor;
   String get nome => _nome;
   String get cpf => _cpf;
   String get email => _email;
@@ -52,9 +55,10 @@ class LogAuditoriaDto {
   String get entidade => _entidade;
   String get entidadeId => _entidadeId;
   String get detalhes => _detalhes;
+  String get data => _formatarDataOffset(_data);
 
   set id(String v) => _id = v;
-  set idEmissor(String v) => _idEmissor = v;
+  set idEmissor(FuncionarioDto v) => _emissor = v;
   set nome(String v) => _nome = v;
   set cpf(String v) => _cpf = v;
   set email(String v) => _email = v;
@@ -68,28 +72,33 @@ class LogAuditoriaDto {
   factory LogAuditoriaDto.fromJson(Map<String, dynamic> json) {
     return LogAuditoriaDto(
       id: json['id'],
-      idEmissor: json['emissor']?['id'] ?? '',
+      emissor: FuncionarioDto.fromJson(json['funcionario']),
       nome: json['nome'],
       cpf: json['cpf'],
       email: json['email'],
-      telefone: json['telefone'],
+      telefone: json['telefone'] ?? '',
       setor: json['setor'],
       acao: json['acao'],
       entidade: json['entidade'],
       entidadeId: json['entidadeId'],
       detalhes: json['detalhes'],
-      data: DateTime.parse(json['criadoEm']),
+      data: json['criadoEm'],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'nome': _nome,
-      'cpf': _cpf,
-      'telefone': _telefone,
-      'acao': _acao,
-      if(inicio != null) 'inicio': inicio!.toIso8601String(),
-      if(fim != null) 'fim': fim!.toIso8601String(),
-    };
-  }
+  static String _formatarDataOffset(String offsetDateTimeString) {
+  final localDate = DateTime.parse(offsetDateTimeString).toLocal();
+
+  String dois(int n) => n.toString().padLeft(2, '0');
+
+  final dia = dois(localDate.day);
+  final mes = dois(localDate.month);
+  final ano = localDate.year.toString();
+
+  final hora = dois(localDate.hour);
+  final minuto = dois(localDate.minute);
+
+  return "$dia/$mes/$ano $hora:$minuto";
+}
+
 }

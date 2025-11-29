@@ -6,7 +6,7 @@ import 'package:fronterp/dtos/funcionario_dto.dart';
 import 'package:fronterp/dtos/log_auditoria_dto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/dtos/produto_dto.dart';
-import 'package:fronterp/dtos/titulo_dto_out.dart';
+import 'package:fronterp/dtos/titulo_dto.dart';
 import 'package:fronterp/services/dio_client.dart';
 
 class CeoService {
@@ -108,7 +108,7 @@ class CeoService {
     await _dio.delete('$s/titulos/$id');
   }
 
-  static Future<PaginaDto<TituloDtoOut>> getTitulos({
+  static Future<PaginaDto<TituloDto>> getTitulos({
     String? nome,
     String? cpf,
     String? cnpj,
@@ -132,9 +132,9 @@ class CeoService {
           'pagina': pagina,
         },
       );
-      return PaginaDto<TituloDtoOut>.fromJson(
+      return PaginaDto<TituloDto>.fromJson(
         response.data,
-        (json) => TituloDtoOut.fromJson(json),
+        (json) => TituloDto.fromJson(json),
       );
     } catch (e) {
       rethrow;

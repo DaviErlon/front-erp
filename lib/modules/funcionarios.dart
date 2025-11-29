@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_filtro.dart';
-import 'package:fronterp/components/filtro_dialog_funcionarios.dart';
+import 'package:fronterp/components/botoes/botao_filtro.dart';
+import 'package:fronterp/components/botoeslinhas/linha_funcionario.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_dialog_funcionarios.dart';
+import 'package:fronterp/dtos/funcionario_dto.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/services/ceo_service.dart';
 import 'package:fronterp/utils/utils.dart';
 
 class ModuloFuncionario extends StatefulWidget {
@@ -10,9 +15,46 @@ class ModuloFuncionario extends StatefulWidget {
   State<ModuloFuncionario> createState() => _ModuloFuncionarioState();
 }
 
-class _ModuloFuncionarioState extends State<ModuloFuncionario> {
+class _ModuloFuncionarioState extends State<ModuloFuncionario>
+    with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
+  late TextEditingController _buscaController;
   Funcionario? _filtroTipoFuncionario;
+
+  PaginaDto<FuncionarioDto>? _funcionarios;
+
+  Future<void> _carregarFuncionarios() async {
+    try {
+      late PaginaDto<FuncionarioDto> dados;
+
+      switch (_tipoPesquisa.data) {
+        case Pesquisa.nome:
+        dados = await CeoService.getFuncionarios(nome: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          break;
+        case Pesquisa.cpf:
+        dados = await CeoService.getFuncionarios(cpf: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          break;
+        case Pesquisa.telefone:
+        dados = await CeoService.getFuncionarios(telefone: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          break;
+        case _:
+          break;
+      }
+
+      setState(() {
+        _funcionarios = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      doLogout(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
+  }
 
   @override
   void initState() {
@@ -23,6 +65,14 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario> {
       },
       data: Pesquisa.nome,
     );
+    _buscaController = TextEditingController();
+    _carregarFuncionarios();
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,7 +104,11 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario> {
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          controller: _buscaController,
+                          onSubmitted: (v) {
+                            _filtroTipoFuncionario = null;
+                            _carregarFuncionarios();
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise funcionários",
                             hintStyle: TextStyle(
@@ -84,7 +138,10 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario> {
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _filtroTipoFuncionario = null;
+                            _carregarFuncionarios();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,
@@ -134,6 +191,7 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario> {
 
                       setState(() {
                         _filtroTipoFuncionario = filtros;
+                        _carregarFuncionarios();
                       });
                     },
                     splashColor: Colors.transparent,
@@ -155,6 +213,27 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 340,
+                width: 970,
+                child: _funcionarios == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _funcionarios!.dados.length,
+                          itemBuilder: (context, index) {
+                            final funcionario = _funcionarios!.dados[index];
+                            return LinhaFuncionario(
+                              funcionario: funcionario,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),

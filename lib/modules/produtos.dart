@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/dtos/produto_dto.dart';
 import 'package:fronterp/utils/utils.dart';
-import 'package:fronterp/components/filtro_dialog_produtos.dart';
-import 'package:fronterp/components/linha_produto.dart';
-import 'package:fronterp/services/data_storage.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_dialog_produtos.dart';
+import 'package:fronterp/components/botoeslinhas/linha_produto.dart';
 import 'package:fronterp/services/ceo_service.dart';
 import 'package:dio/dio.dart';
 
@@ -19,10 +18,12 @@ class _ModuloProdutosState extends State<ModuloProdutos>
     with LogoutMixin {
   late ControllerDialogProdutos _filtrosProdutos;
   PaginaDto<ProdutoDto>? _produtos;
+  late TextEditingController _buscaController;
 
   @override
   void initState() {
     super.initState();
+    _buscaController = TextEditingController();
     _filtrosProdutos = ControllerDialogProdutos();
 
     _carregarProdutos();
@@ -30,8 +31,7 @@ class _ModuloProdutosState extends State<ModuloProdutos>
 
   Future<void> _carregarProdutos() async {
     try {
-      await DataStorage.carregarToken();
-      final dados = await CeoService.getProdutos();
+      final dados = await CeoService.getProdutos(nome: _buscaController.text, semEstoque: _filtrosProdutos.esgotado, comEstoquePendente: _filtrosProdutos.encomendado, comEstoqueReservado: _filtrosProdutos.reservado);
 
       setState(() {
         _produtos = dados;
@@ -41,11 +41,17 @@ class _ModuloProdutosState extends State<ModuloProdutos>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));
-    } catch (err, _) {
+    } catch (err) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
     }
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,7 +83,11 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          controller: _buscaController,
+                          onSubmitted: (v) async {
+                            _filtrosProdutos.clear();
+                            await _carregarProdutos();
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise produtos",
                             hintStyle: TextStyle(
@@ -107,7 +117,10 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            _filtrosProdutos.clear();
+                            await _carregarProdutos();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,
@@ -136,9 +149,8 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                       );
 
                       if (filtros != null) {
-                        setState(() {
-                          _filtrosProdutos.updateFromMap(filtros);
-                        });
+                        _filtrosProdutos.updateFromMap(filtros);
+                        await _carregarProdutos();
                       }
                     },
                     splashColor: Colors.transparent,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/filtro_dialog.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FiltrosDialogTitulos extends StatefulWidget {
@@ -64,9 +64,8 @@ class _FiltrosDialogTitulosState extends State<FiltrosDialogTitulos> {
               texto: "Sim",
               isSelected: value == true,
               onTap: () {
-                setState(() {
-                  onChanged(value == true ? null : true);
-                });
+                final newValue = value == true ? null : true;
+                onChanged(newValue); // sem setState aqui
               },
             ),
             const SizedBox(width: 10),
@@ -74,9 +73,8 @@ class _FiltrosDialogTitulosState extends State<FiltrosDialogTitulos> {
               texto: "Não",
               isSelected: value == false,
               onTap: () {
-                setState(() {
-                  onChanged(value == false ? null : false);
-                });
+                final newValue = value == false ? null : false;
+                onChanged(newValue); // sem setState aqui
               },
             ),
           ],
@@ -93,18 +91,22 @@ class _FiltrosDialogTitulosState extends State<FiltrosDialogTitulos> {
         _boolSelector(
           label: "Aprovado",
           value: aprovado,
-          onChanged: (v) => aprovado = v,
+          onChanged: (v) => setState(() => aprovado = v),
         ),
         const SizedBox(height: 16),
 
         _boolSelector(
           label: "Recebido",
           value: recebido,
-          onChanged: (v) => recebido = v,
+          onChanged: (v) => setState(() => recebido = v),
         ),
         const SizedBox(height: 16),
 
-        _boolSelector(label: "Pago", value: pago, onChanged: (v) => pago = v),
+        _boolSelector(
+          label: "Pago",
+          value: pago,
+          onChanged: (v) => setState(() => pago = v),
+        ),
 
         const SizedBox(height: 16),
       ],

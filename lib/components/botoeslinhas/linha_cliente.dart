@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/dtos/titulo_dto_out.dart';
+import 'package:fronterp/dtos/cliente_dto.dart';
 
-class LinhaTitulo extends StatelessWidget {
-  final TituloDtoOut titulo;
+class LinhaCliente extends StatelessWidget {
+  final ClienteDto cliente;
   final bool isEven;
   final VoidCallback? onTap;
 
-  const LinhaTitulo({
+  const LinhaCliente({
     super.key,
-    required this.titulo,
+    required this.cliente,
     required this.isEven,
     this.onTap,
   });
@@ -22,38 +22,36 @@ class LinhaTitulo extends StatelessWidget {
       child: Container(
         height: 55,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: background,
-        ),
+        decoration: BoxDecoration(color: background),
         child: Row(
           spacing: 30,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 240,
+              width: 440, 
               child: Center(
-                child: Text(titulo.nome, style: const TextStyle(fontSize: 14)),
-              ),
-            ),
-            SizedBox(
-              width: 140,
-              child: Center(
-                child: Text(titulo.cnpj ?? titulo.cpf ?? "SEM CPF", style: const TextStyle(fontSize: 14)),
-              ),
-            ),
-            SizedBox(
-              width: 180,
-              child: Center(
-                child: Text("R\$ ${titulo.valor.toStringAsFixed(2)}", style: const TextStyle(fontSize: 14)),
+                child: Text(cliente.nome, style: const TextStyle(fontSize: 14)),
               ),
             ),
             SizedBox(
               width: 120,
               child: Center(
-                child: Text(TituloDtoOut.formatarDataOffset(titulo.dataEmissao), style: const TextStyle(fontSize: 14)),
+                child: Text(
+                  cliente.cpf,
+                  style: const TextStyle(fontSize: 14),
+                ),
               ),
             ),
-          ],
+            SizedBox(
+              width: 120,
+              child: Center(
+                child: Text(
+                  cliente.telefone,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            ],
         ),
       ),
     );

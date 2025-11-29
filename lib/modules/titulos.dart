@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_filtro.dart';
+import 'package:fronterp/components/botoes/botao_filtro.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
-import 'package:fronterp/dtos/titulo_dto_out.dart';
+import 'package:fronterp/dtos/titulo_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
-import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
-import 'package:fronterp/components/filtro_dialog_titulos.dart';
-import 'package:fronterp/components/linha_titulo.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_dialog_titulos.dart';
+import 'package:fronterp/components/botoeslinhas/linha_titulo.dart';
 import 'package:dio/dio.dart';
 
 class ModuloTitulos extends StatefulWidget {
@@ -19,7 +18,8 @@ class ModuloTitulos extends StatefulWidget {
 class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
   late ControllerDialogTitulos _filtroTitulos;
-  PaginaDto<TituloDtoOut>? _titulos;
+  late TextEditingController _buscaController;
+  PaginaDto<TituloDto>? _titulos;
 
   @override
   void initState() {
@@ -31,14 +31,48 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
       data: Pesquisa.nome,
     );
     _filtroTitulos = ControllerDialogTitulos();
-
+    _buscaController = TextEditingController();
     _carregarTitulos();
   }
 
   Future<void> _carregarTitulos() async {
     try {
-      await DataStorage.carregarToken();
-      final dados = await CeoService.getTitulos();
+      late PaginaDto<TituloDto> dados;
+
+      switch (_tipoPesquisa.data) {
+        case Pesquisa.nome:
+          dados = await CeoService.getTitulos(
+            nome: _buscaController.text,
+            pago: _filtroTitulos.pago,
+            recebido: _filtroTitulos.recebido,
+            aprovado: _filtroTitulos.aprovado,
+          );
+          break;
+        case Pesquisa.cpf:
+          dados = await CeoService.getTitulos(
+            cpf: _buscaController.text,
+            pago: _filtroTitulos.pago,
+            recebido: _filtroTitulos.recebido,
+            aprovado: _filtroTitulos.aprovado,
+          );
+          break;
+        case Pesquisa.cnpj:
+          dados = await CeoService.getTitulos(
+            cnpj: _buscaController.text,
+            pago: _filtroTitulos.pago,
+            recebido: _filtroTitulos.recebido,
+            aprovado: _filtroTitulos.aprovado,
+          );
+          break;
+        case Pesquisa.telefone:
+          dados = await CeoService.getTitulos(
+            telefone: _buscaController.text,
+            pago: _filtroTitulos.pago,
+            recebido: _filtroTitulos.recebido,
+            aprovado: _filtroTitulos.aprovado,
+          );
+          break;
+      }
 
       setState(() {
         _titulos = dados;
@@ -48,11 +82,17 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));
-    } catch (err, _) {
+    } catch (err) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
     }
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,7 +124,11 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          controller: _buscaController,
+                          onSubmitted: (v) async {
+                            _filtroTitulos.clear();
+                            await _carregarTitulos();
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise títulos",
                             hintStyle: TextStyle(
@@ -114,8 +158,9 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {});
+                          onPressed: () async {
+                            _filtroTitulos.clear();
+                            await _carregarTitulos();
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -166,9 +211,8 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
                       );
 
                       if (filtros != null) {
-                        setState(() {
-                          _filtroTitulos.updateFromMap(filtros);
-                        });
+                        _filtroTitulos.updateFromMap(filtros);
+                        await _carregarTitulos();
                       }
                     },
                     splashColor: Colors.transparent,

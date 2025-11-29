@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_filtro.dart';
-import 'package:fronterp/components/linha_fornecedor.dart';
+import 'package:fronterp/components/botoes/botao_filtro.dart';
+import 'package:fronterp/components/botoeslinhas/linha_fornecedor.dart';
 import 'package:fronterp/dtos/fornecedor_dto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
-import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
 
 class ModuloFornecedores extends StatefulWidget {
@@ -19,13 +18,28 @@ class ModuloFornecedores extends StatefulWidget {
 class _ModuloFornecedoresState extends State<ModuloFornecedores>
     with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
+  late TextEditingController _buscaController;
 
   PaginaDto<FornecedorDto>? _fornecedores;
 
   Future<void> _carregarFornecedores() async {
     try {
-      await DataStorage.carregarToken();
-      final dados = await CeoService.getFornecedores();
+      late PaginaDto<FornecedorDto> dados;
+
+      switch (_tipoPesquisa.data) {
+        case Pesquisa.nome:
+        dados = await CeoService.getFornecedores(nome: _buscaController.text);
+          break;
+        case Pesquisa.cpf:
+        dados = await CeoService.getFornecedores(cpf: _buscaController.text);
+          break;
+        case Pesquisa.cnpj:
+        dados = await CeoService.getFornecedores(cnpj: _buscaController.text);
+          break;
+        case Pesquisa.telefone:
+        dados = await CeoService.getFornecedores(telefone: _buscaController.text);
+          break;
+      }
 
       setState(() {
         _fornecedores = dados;
@@ -36,7 +50,7 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));
-    } catch (err, _) {
+    } catch (err) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
@@ -52,8 +66,14 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
       },
       data: Pesquisa.nome,
     );
-
+    _buscaController = TextEditingController();
     _carregarFornecedores();
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,7 +105,10 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          controller: _buscaController,
+                          onSubmitted: (v) async {
+                            await _carregarFornecedores();
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise fornecedores",
                             hintStyle: TextStyle(
@@ -115,7 +138,9 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await _carregarFornecedores();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,

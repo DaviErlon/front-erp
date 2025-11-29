@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fronterp/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:fronterp/auth/auth_state.dart';
 
 class MoldeTela extends StatelessWidget with LogoutMixin {
   final Widget body;
@@ -10,6 +12,9 @@ class MoldeTela extends StatelessWidget with LogoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    
+    final auth = Provider.of<AuthState>(context);
+
     return Scaffold(
       backgroundColor: Color(0xF3F4F6FF),
       body: Row(
@@ -34,7 +39,7 @@ class MoldeTela extends StatelessWidget with LogoutMixin {
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(vertical: 10),
                     child: Text(
-                      '@nome_func',
+                      '@${auth.nome?.split(" ").first ?? 'func'}',
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         color: Colors.deepPurple,

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../services/dio_client.dart';
 import '../dtos/pagina_dto.dart';
-import '../dtos/titulo_dto_out.dart';
+import '../dtos/titulo_dto.dart';
 import '../dtos/item_produto_dto.dart';
 import '../dtos/cliente_dto.dart';
 import '../dtos/produto_dto.dart';
@@ -15,17 +15,17 @@ class OperadorService {
   //   CRIAÇÃO DE TÍTULOS
   // ============================
 
-  static Future<TituloDtoOut> criarVendaCliente(String clienteId) async {
+  static Future<TituloDto> criarVendaCliente(String clienteId) async {
     final response = await _dio.post('$s/venda/iniciar/$clienteId');
-    return TituloDtoOut.fromJson(response.data);
+    return TituloDto.fromJson(response.data);
   }
 
-  static Future<TituloDtoOut> criarVenda() async {
+  static Future<TituloDto> criarVenda() async {
     final response = await _dio.post('$s/venda/iniciar');
-    return TituloDtoOut.fromJson(response.data);
+    return TituloDto.fromJson(response.data);
   }
 
-  static Future<TituloDtoOut> addItemTitulo(
+  static Future<TituloDto> addItemTitulo(
     String tituloId,
     ItemProdutoDto dto,
   ) async {
@@ -33,15 +33,15 @@ class OperadorService {
       '$s/venda/adicionar/$tituloId',
       data: dto.toJson(),
     );
-    return TituloDtoOut.fromJson(response.data);
+    return TituloDto.fromJson(response.data);
   }
 
-  static Future<TituloDtoOut> finalizarVenda(String tituloId) async {
+  static Future<TituloDto> finalizarVenda(String tituloId) async {
     final response = await _dio.put('$s/venda/finalizar/$tituloId');
-    return TituloDtoOut.fromJson(response.data);
+    return TituloDto.fromJson(response.data);
   }
 
-  static Future<TituloDtoOut> cancelarVenda(
+  static Future<TituloDto> cancelarVenda(
     String tituloId,
     String tokenAutorizacao,
   ) async {
@@ -50,7 +50,7 @@ class OperadorService {
       data: tokenAutorizacao,
     );
 
-    return TituloDtoOut.fromJson(response.data);
+    return TituloDto.fromJson(response.data);
   }
 
   // ============================
@@ -122,7 +122,7 @@ class OperadorService {
   //   CONSULTAR TÍTULOS EMITIDOS
   // ============================
 
-  static Future<PaginaDto<TituloDtoOut>> getTitulosEmitidos({
+  static Future<PaginaDto<TituloDto>> getTitulosEmitidos({
     String? cpf,
     String? nome,
     DateTime? inicio,
@@ -148,7 +148,7 @@ class OperadorService {
 
     return PaginaDto.fromJson(
       response.data,
-      (json) => TituloDtoOut.fromJson(json),
+      (json) => TituloDto.fromJson(json),
     );
   }
 }

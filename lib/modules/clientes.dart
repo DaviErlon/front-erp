@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_filtro.dart';
-import 'package:fronterp/components/linha_cliente.dart';
+import 'package:fronterp/components/botoes/botao_filtro.dart';
+import 'package:fronterp/components/botoeslinhas/linha_cliente.dart';
 import 'package:fronterp/dtos/cliente_dto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
-import 'package:fronterp/services/data_storage.dart';
 import 'package:fronterp/utils/utils.dart';
 
 class ModuloClientes extends StatefulWidget {
@@ -18,11 +17,25 @@ class ModuloClientes extends StatefulWidget {
 class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
   PaginaDto<ClienteDto>? _clientes;
+  late TextEditingController _buscaController;
 
   Future<void> _carregarClientes() async {
     try {
-      await DataStorage.carregarToken();
-      final dados = await CeoService.getClientes();
+      late PaginaDto<ClienteDto> dados;
+
+      switch(_tipoPesquisa.data){
+        case Pesquisa.nome:
+        dados = await CeoService.getClientes(nome: _buscaController.text);
+          break;
+        case Pesquisa.cpf:
+        dados = await CeoService.getClientes(cpf: _buscaController.text);
+          break;
+        case Pesquisa.telefone:
+        dados = await CeoService.getClientes(telefone: _buscaController.text);
+          break;
+        case _:
+          break;
+      }
 
       setState(() {
         _clientes = dados;
@@ -32,7 +45,7 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Token expirado!')));
-    } catch (err, _) {
+    } catch (err) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
@@ -48,7 +61,14 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
       },
       data: Pesquisa.nome,
     );
+    _buscaController = TextEditingController();
     _carregarClientes();
+  }
+
+  @override
+  void dispose() {
+    _buscaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,7 +100,10 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {},
+                          controller: _buscaController,
+                          onSubmitted: (v) async {
+                            await _carregarClientes();
+                          },
                           decoration: InputDecoration(
                             hintText: "Pesquise clientes",
                             hintStyle: TextStyle(
@@ -110,7 +133,9 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await _carregarClientes();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,

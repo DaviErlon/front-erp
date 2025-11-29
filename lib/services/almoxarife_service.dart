@@ -4,7 +4,7 @@ import '../services/dio_client.dart';
 import '../dtos/pagina_dto.dart';
 import '../dtos/produto_dto.dart';
 import '../dtos/fornecedor_dto.dart';
-import '../dtos/titulo_dto_out.dart';
+import '../dtos/titulo_dto.dart';
 
 class AlmoxarifeService {
   static final Dio _dio = DioClient.instance;
@@ -96,7 +96,7 @@ class AlmoxarifeService {
     await _dio.put('$s/titulos/$id');
   }
 
-  static Future<PaginaDto<TituloDtoOut>> getTitulos({
+  static Future<PaginaDto<TituloDto>> getTitulos({
     String? nome,
     String? cpf,
     String? cnpj,
@@ -126,7 +126,7 @@ class AlmoxarifeService {
 
     return PaginaDto.fromJson(
       response.data,
-      (json) => TituloDtoOut.fromJson(json),
+      (json) => TituloDto.fromJson(json),
     );
   }
 }

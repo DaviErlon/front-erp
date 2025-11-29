@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:fronterp/dtos/titulo_dto_in.dart';
-
+import 'package:fronterp/dtos/item_produto_dto.dart';
 import '../services/dio_client.dart';
-
 import '../dtos/pagina_dto.dart';
 import '../dtos/produto_dto.dart';
 import '../dtos/fornecedor_dto.dart';
 import '../dtos/funcionario_dto.dart';
-import '../dtos/titulo_dto_out.dart';
+import '../dtos/titulo_dto.dart';
 
 
 class FinanceiroService {
@@ -109,7 +107,7 @@ class FinanceiroService {
   //           TÍTULOS
   // ============================
 
-  static Future<PaginaDto<TituloDtoOut>> getTitulos({
+  static Future<PaginaDto<TituloDto>> getTitulos({
     String? nome,
     String? cpf,
     String? cnpj,
@@ -141,7 +139,7 @@ class FinanceiroService {
 
     return PaginaDto.fromJson(
       response.data,
-      (json) => TituloDtoOut.fromJson(json),
+      (json) => TituloDto.fromJson(json),
     );
   }
 
@@ -149,9 +147,12 @@ class FinanceiroService {
     await _dio.post('$s/titulos/funcionario/$id');
   }
 
-  static Future<void> emitirTituloFornecedor(TituloDtoIn dto) async {
-    await _dio.post('$s/titulos/fornecedor',
-        data: dto.toJson());
+  static Future<void> iniciarTituloFornecedor(String id) async {
+    await _dio.post('$s/titulos/fornecedor/$id');
+  }
+
+  static Future<void> addItemTituloFornecedor(String id, ItemProdutoDto dto) async {
+    await _dio.post('$s/titulos/fornecedor/$id', data: dto.toJson());
   }
 
   static Future<void> aprovarTitulo(String id) async {

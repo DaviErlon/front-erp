@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/botao_filtro.dart';
-import 'package:fronterp/components/filtro_log.dart';
+import 'package:fronterp/components/botoes/botao_filtro.dart';
+import 'package:fronterp/components/botoeslinhas/linha_log.dart';
+import 'package:fronterp/components/filtrosdialog/filtro_log.dart';
+import 'package:fronterp/dtos/log_auditoria_dto.dart';
+import 'package:fronterp/dtos/pagina_dto.dart';
+import 'package:fronterp/services/ceo_service.dart';
 import 'package:fronterp/utils/utils.dart';
 
 class ModuloLogs extends StatefulWidget {
@@ -10,11 +15,58 @@ class ModuloLogs extends StatefulWidget {
   State<ModuloLogs> createState() => _ModuloLogsState();
 }
 
-class _ModuloLogsState extends State<ModuloLogs> {
+class _ModuloLogsState extends State<ModuloLogs> with LogoutMixin {
   late ControllerGenerico<Pesquisa> _tipoPesquisa;
   late TextEditingController _buscaController;
 
   DateTime? _data;
+
+  PaginaDto<LogAuditoriaDto>? _logs;
+
+  Future<void> _carregarLogs() async {
+    try {
+      late PaginaDto<LogAuditoriaDto> dados;
+
+      switch (_tipoPesquisa.data) {
+        case Pesquisa.nome:
+          dados = await CeoService.getLogs(
+            nome: _buscaController.text,
+            inicio: _data,
+            fim: _data != null ? _fimDoDia(_data!) : null,
+          );
+          break;
+        case Pesquisa.cpf:
+          dados = await CeoService.getLogs(
+            cpf: _buscaController.text,
+            inicio: _data,
+            fim: _data != null ? _fimDoDia(_data!) : null,
+          );
+          break;
+        case Pesquisa.telefone:
+          dados = await CeoService.getLogs(
+            telefone: _buscaController.text,
+            inicio: _data,
+            fim: _data != null ? _fimDoDia(_data!) : null,
+          );
+          break;
+        case _:
+          break;
+      }
+
+      setState(() {
+        _logs = dados;
+      });
+    } on DioException catch (dioErr, _) {
+      doLogout(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
+  }
 
   @override
   void initState() {
@@ -26,6 +78,11 @@ class _ModuloLogsState extends State<ModuloLogs> {
       },
       data: Pesquisa.nome,
     );
+    _carregarLogs();
+  }
+
+  DateTime _fimDoDia(DateTime x) {
+    return DateTime(x.year, x.month, x.day, 23, 59, 59, 999);
   }
 
   @override
@@ -63,8 +120,10 @@ class _ModuloLogsState extends State<ModuloLogs> {
                     children: [
                       Expanded(
                         child: TextField(
-                          onSubmitted: (v) {
-                            setState(() {});
+                          controller: _buscaController,
+                          onSubmitted: (v) async {
+                            _data = null; 
+                            await _carregarLogs();
                           },
                           decoration: InputDecoration(
                             hintText: "Pesquise Logs",
@@ -95,7 +154,10 @@ class _ModuloLogsState extends State<ModuloLogs> {
                         width: 100,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            _data = null;
+                            await _carregarLogs();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             elevation: 0,
@@ -143,9 +205,8 @@ class _ModuloLogsState extends State<ModuloLogs> {
                         builder: (_) => const FiltroLog(),
                       );
                       if (filtros != null) {
-                        setState(() {
-                          _data = filtros;
-                        });
+                        _data = filtros;
+                        await _carregarLogs();
                       }
                     },
                     splashColor: Colors.transparent,
@@ -167,6 +228,27 @@ class _ModuloLogsState extends State<ModuloLogs> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 340,
+                width: 970,
+                child: _logs == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          itemCount: _logs!.dados.length,
+                          itemBuilder: (context, index) {
+                            final log = _logs!.dados[index];
+                            return LinhaLog(
+                              log: log,
+                              isEven: index % 2 == 0,
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),
