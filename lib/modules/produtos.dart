@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fronterp/components/dialogs/upsert/upsert_produto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/dtos/produto_dto.dart';
 import 'package:fronterp/utils/utils.dart';
-import 'package:fronterp/components/filtrosdialog/filtro_dialog_produtos.dart';
+import 'package:fronterp/components/dialogs/filtros/filtro_dialog_produtos.dart';
 import 'package:fronterp/components/botoeslinhas/linha_produto.dart';
 import 'package:fronterp/services/ceo_service.dart';
 import 'package:dio/dio.dart';
@@ -14,8 +15,7 @@ class ModuloProdutos extends StatefulWidget {
   State<ModuloProdutos> createState() => _ModuloProdutosState();
 }
 
-class _ModuloProdutosState extends State<ModuloProdutos>
-    with LogoutMixin {
+class _ModuloProdutosState extends State<ModuloProdutos> with LogoutMixin {
   late ControllerDialogProdutos _filtrosProdutos;
   PaginaDto<ProdutoDto>? _produtos;
   late TextEditingController _buscaController;
@@ -31,11 +31,37 @@ class _ModuloProdutosState extends State<ModuloProdutos>
 
   Future<void> _carregarProdutos() async {
     try {
-      final dados = await CeoService.getProdutos(nome: _buscaController.text, semEstoque: _filtrosProdutos.esgotado, comEstoquePendente: _filtrosProdutos.encomendado, comEstoqueReservado: _filtrosProdutos.reservado);
+      final dados = await CeoService.getProdutos(
+        nome: _buscaController.text,
+        semEstoque: _filtrosProdutos.esgotado,
+        comEstoquePendente: _filtrosProdutos.encomendado,
+        comEstoqueReservado: _filtrosProdutos.reservado,
+      );
 
       setState(() {
         _produtos = dados;
       });
+    } on DioException catch (dioErr, _) {
+      doLogout(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token expirado!')));
+    } catch (err) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro de conexão com o servidor')));
+    }
+  }
+  
+  Future<void> _adicionarProduto(ProdutoDto dto) async {
+    try {
+      await CeoService.addProduto(dto);
+
+      await _carregarProdutos();
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Produto adicionado!')));
     } on DioException catch (dioErr, _) {
       doLogout(context);
       ScaffoldMessenger.of(
@@ -71,7 +97,7 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Padding(
-                padding: EdgeInsetsGeometry.only(
+                padding: EdgeInsets.only(
                   top: 10,
                   bottom: 20,
                   left: 30,
@@ -138,40 +164,66 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      final filtros = await showDialog<Map<String, dynamic>>(
-                        context: context,
-                        builder: (_) => const FiltrosDialogProdutos(),
-                      );
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 55),
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    InkWell(
+                      onTap: () async {
+                        final filtros = await showDialog<Map<String, dynamic>>(
+                          context: context,
+                          builder: (_) => const FiltrosDialogProdutos(),
+                        );
 
-                      if (filtros != null) {
-                        _filtrosProdutos.updateFromMap(filtros);
-                        await _carregarProdutos();
-                      }
-                    },
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        Icon(
-                          Icons.filter_alt_outlined,
-                          size: 26,
-                          color: Colors.deepPurple,
-                        ),
-                        Text(
-                          'filtros',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ],
+                        if (filtros != null) {
+                          _filtrosProdutos.updateFromMap(filtros);
+                          await _carregarProdutos();
+                        }
+                      },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          Icon(
+                            Icons.filter_alt_outlined,
+                            size: 26,
+                            color: Colors.deepPurple,
+                          ),
+                          Text(
+                            'filtros',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const Spacer(),
+                    SizedBox(
+                      width: 45,
+                      height: 45,
+                      child: FloatingActionButton(
+                        onPressed: () async {
+                          final dadosProduto =
+                              await showDialog<ProdutoDto>(
+                                context: context,
+                                builder: (_) => const UpsertProduto(),
+                              );
+
+                          if(dadosProduto != null) await _adicionarProduto(dadosProduto);
+                        },
+                        tooltip: 'Cadastrar Produto',
+                        backgroundColor: Colors.green,
+                        child: const Icon(
+                          Icons.add,
+                          size: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -179,19 +231,99 @@ class _ModuloProdutosState extends State<ModuloProdutos>
                 width: 970,
                 child: _produtos == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _produtos!.dados.length,
-                          itemBuilder: (context, index) {
-                            final produto = _produtos!.dados[index];
-                            return LinhaProduto(
-                              produto: produto,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 340,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 140,
+                                  child: Center(
+                                    child: Text(
+                                      'Preço',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Estoque Disponível',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Estoque Reservado',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Estoque Encomendado',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                itemCount: _produtos!.dados.length,
+                                itemBuilder: (context, index) {
+                                  final produto = _produtos!.dados[index];
+                                  return LinhaProduto(
+                                    produto: produto,
+                                    isEven: index % 2 == 0,
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

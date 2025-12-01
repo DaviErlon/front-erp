@@ -32,7 +32,6 @@ class _CeoPageState extends State<CeoPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MoldeTela(
@@ -40,8 +39,10 @@ class _CeoPageState extends State<CeoPage> {
         children: [
           ...{
             'ceo.sidebar.titles': Icons.receipt_long,
-            'ceo.sidebar.employees': Icons.search,
-            'ceo.sidebar.queries': Icons.list_alt,
+            'ceo.sidebar.employees': Icons.people,
+            'ceo.sidebar.clients': Icons.person,
+            'ceo.sidebar.suppliers': Icons.store,
+            'ceo.sidebar.products': Icons.shopping_bag,
             'ceo.sidebar.logs': Icons.history_edu,
           }.entries.toList().asMap().entries.map((mapEntry) {
             final index = mapEntry.key;
@@ -62,8 +63,10 @@ class _CeoPageState extends State<CeoPage> {
         children: [
           ModuloTitulos(),
           ModuloFuncionario(),
-          ModuloFornecedores(),
           ModuloClientes(),
+          ModuloFornecedores(),
+          ModuloProdutos(),
+          ModuloLogs(),
         ],
       ),
     );

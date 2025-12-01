@@ -110,9 +110,9 @@ class _LoginPageState extends State<LoginPage> {
                     // EMAIL
                     TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'auth.login.email_label'.tr(),
-                        hintText: 'auth.login.email_hint'.tr(),
+                      decoration: Util.estiloTextFiel(
+                        label: 'auth.login.email_label'.tr(),
+                        hint: 'auth.login.email_hint'.tr(),
                       ),
                     ),
 
@@ -120,9 +120,9 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: _senhaController,
                       obscureText: !_senhaOculta.data,
-                      decoration: InputDecoration(
-                        labelText: 'auth.login.password_label'.tr(),
-                        hintText: 'auth.login.password_hint'.tr(),
+                      decoration: Util.estiloTextFiel(
+                        label: 'auth.login.password_label'.tr(),
+                        hint: 'auth.login.password_hint'.tr(),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _senhaOculta.data

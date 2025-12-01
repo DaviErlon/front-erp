@@ -11,8 +11,7 @@ class ModuloFornecedores extends StatefulWidget {
   const ModuloFornecedores({super.key});
 
   @override
-  State<ModuloFornecedores> createState() =>
-      _ModuloFornecedoresState();
+  State<ModuloFornecedores> createState() => _ModuloFornecedoresState();
 }
 
 class _ModuloFornecedoresState extends State<ModuloFornecedores>
@@ -28,16 +27,18 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
 
       switch (_tipoPesquisa.data) {
         case Pesquisa.nome:
-        dados = await CeoService.getFornecedores(nome: _buscaController.text);
+          dados = await CeoService.getFornecedores(nome: _buscaController.text);
           break;
         case Pesquisa.cpf:
-        dados = await CeoService.getFornecedores(cpf: _buscaController.text);
+          dados = await CeoService.getFornecedores(cpf: _buscaController.text);
           break;
         case Pesquisa.cnpj:
-        dados = await CeoService.getFornecedores(cnpj: _buscaController.text);
+          dados = await CeoService.getFornecedores(cnpj: _buscaController.text);
           break;
         case Pesquisa.telefone:
-        dados = await CeoService.getFornecedores(telefone: _buscaController.text);
+          dados = await CeoService.getFornecedores(
+            telefone: _buscaController.text,
+          );
           break;
       }
 
@@ -45,7 +46,6 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
         _fornecedores = dados;
       });
     } on DioException catch (dioErr, _) {
-      
       doLogout(context);
       ScaffoldMessenger.of(
         context,
@@ -190,19 +190,76 @@ class _ModuloFornecedoresState extends State<ModuloFornecedores>
                 width: 970,
                 child: _fornecedores == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _fornecedores!.dados.length,
-                          itemBuilder: (context, index) {
-                            final fornecedor = _fornecedores!.dados[index];
-                            return LinhaFornecedor(
-                              fornecedor: fornecedor,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 440,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Cpf/Cnpj',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Telefone',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                child: ListView.builder(
+                                  itemCount: _fornecedores!.dados.length,
+                                  itemBuilder: (context, index) {
+                                    final fornecedor =
+                                        _fornecedores!.dados[index];
+                                    return LinhaFornecedor(
+                                      fornecedor: fornecedor,
+                                      isEven: index % 2 == 0,
+                                      onTap: () {},
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

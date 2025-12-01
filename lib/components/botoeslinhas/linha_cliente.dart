@@ -18,6 +18,7 @@ class LinhaCliente extends StatelessWidget {
     final background = isEven ? Colors.grey[200] : Colors.grey[50];
 
     return InkWell(
+      hoverColor: Colors.transparent,
       onTap: onTap,
       child: Container(
         height: 55,

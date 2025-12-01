@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botoes/botao_filtro.dart';
 import 'package:fronterp/components/botoeslinhas/linha_funcionario.dart';
-import 'package:fronterp/components/filtrosdialog/filtro_dialog_funcionarios.dart';
+import 'package:fronterp/components/dialogs/filtros/filtro_dialog_funcionarios.dart';
 import 'package:fronterp/dtos/funcionario_dto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
@@ -29,13 +29,22 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario>
 
       switch (_tipoPesquisa.data) {
         case Pesquisa.nome:
-        dados = await CeoService.getFuncionarios(nome: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          dados = await CeoService.getFuncionarios(
+            nome: _buscaController.text,
+            tipo: _filtroTipoFuncionario?.name.toUpperCase(),
+          );
           break;
         case Pesquisa.cpf:
-        dados = await CeoService.getFuncionarios(cpf: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          dados = await CeoService.getFuncionarios(
+            cpf: _buscaController.text,
+            tipo: _filtroTipoFuncionario?.name.toUpperCase(),
+          );
           break;
         case Pesquisa.telefone:
-        dados = await CeoService.getFuncionarios(telefone: _buscaController.text, tipo: _filtroTipoFuncionario?.name.toUpperCase());
+          dados = await CeoService.getFuncionarios(
+            telefone: _buscaController.text,
+            tipo: _filtroTipoFuncionario?.name.toUpperCase(),
+          );
           break;
         case _:
           break;
@@ -220,19 +229,85 @@ class _ModuloFuncionarioState extends State<ModuloFuncionario>
                 width: 970,
                 child: _funcionarios == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _funcionarios!.dados.length,
-                          itemBuilder: (context, index) {
-                            final funcionario = _funcionarios!.dados[index];
-                            return LinhaFuncionario(
-                              funcionario: funcionario,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 80,
+                                  child: Center(
+                                    child: Text(
+                                      'Cargo',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 360,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Cpf',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Telefone',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                itemCount: _funcionarios!.dados.length,
+                                itemBuilder: (context, index) {
+                                  final funcionario =
+                                      _funcionarios!.dados[index];
+                                  return LinhaFuncionario(
+                                    funcionario: funcionario,
+                                    isEven: index % 2 == 0,
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

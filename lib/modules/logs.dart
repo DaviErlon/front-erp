@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fronterp/components/botoes/botao_filtro.dart';
 import 'package:fronterp/components/botoeslinhas/linha_log.dart';
-import 'package:fronterp/components/filtrosdialog/filtro_log.dart';
+import 'package:fronterp/components/dialogs/filtros/filtro_log.dart';
 import 'package:fronterp/dtos/log_auditoria_dto.dart';
 import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
@@ -122,7 +122,7 @@ class _ModuloLogsState extends State<ModuloLogs> with LogoutMixin {
                         child: TextField(
                           controller: _buscaController,
                           onSubmitted: (v) async {
-                            _data = null; 
+                            _data = null;
                             await _carregarLogs();
                           },
                           decoration: InputDecoration(
@@ -235,19 +235,84 @@ class _ModuloLogsState extends State<ModuloLogs> with LogoutMixin {
                 width: 970,
                 child: _logs == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _logs!.dados.length,
-                          itemBuilder: (context, index) {
-                            final log = _logs!.dados[index];
-                            return LinhaLog(
-                              log: log,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 360,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome do Emissor',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Ação',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Entidade',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Data',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                itemCount: _logs!.dados.length,
+                                itemBuilder: (context, index) {
+                                  final log = _logs!.dados[index];
+                                  return LinhaLog(
+                                    log: log,
+                                    isEven: index % 2 == 0,
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

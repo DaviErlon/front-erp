@@ -119,6 +119,10 @@ class MyApp extends StatelessWidget {
             fontSize: 36,
             fontWeight: FontWeight.w600,
           ),
+          titleSmall: GoogleFonts.inter(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
           labelLarge: GoogleFonts.roboto(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -140,34 +144,6 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-          ),
-        ),
-
-        inputDecorationTheme: InputDecorationTheme(
-          fillColor: Colors.deepPurple.withValues(alpha: 0.05),
-          labelStyle: GoogleFonts.roboto(
-            color: Colors.deepPurple.shade700,
-            fontWeight: FontWeight.w500,
-          ),
-          hintStyle: GoogleFonts.roboto(
-            color: Colors.grey.shade600,
-            fontSize: 14,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 20,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.deepPurple.shade200),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.deepPurple.shade100),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
           ),
         ),
       ),

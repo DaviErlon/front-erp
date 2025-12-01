@@ -4,7 +4,7 @@ import 'package:fronterp/dtos/pagina_dto.dart';
 import 'package:fronterp/dtos/titulo_dto.dart';
 import 'package:fronterp/services/ceo_service.dart';
 import 'package:fronterp/utils/utils.dart';
-import 'package:fronterp/components/filtrosdialog/filtro_dialog_titulos.dart';
+import 'package:fronterp/components/dialogs/filtros/filtro_dialog_titulos.dart';
 import 'package:fronterp/components/botoeslinhas/linha_titulo.dart';
 import 'package:dio/dio.dart';
 
@@ -241,19 +241,72 @@ class _ModuloTitulosState extends State<ModuloTitulos> with LogoutMixin {
                 width: 970,
                 child: _titulos == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _titulos!.dados.length,
-                          itemBuilder: (context, index) {
-                            final titulo = _titulos!.dados[index];
-                            return LinhaTitulo(
-                              titulo: titulo,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 240,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome do titular',
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 140,
+                                  child: Center(
+                                    child: Text(
+                                      'Cpf/Cnpj',
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 180,
+                                  child: Center(
+                                    child: Text(
+                                      'Valor',
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Data',
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                itemCount: _titulos!.dados.length,
+                                itemBuilder: (context, index) {
+                                  final titulo = _titulos!.dados[index];
+                                  return LinhaTitulo(
+                                    titulo: titulo,
+                                    isEven: index % 2 == 0,
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

@@ -18,6 +18,7 @@ class LinhaProduto extends StatelessWidget {
     final background = isEven ? Colors.grey[200] : Colors.grey[50];
 
     return InkWell(
+      hoverColor: Colors.transparent,
       onTap: onTap,
       child: Container(
         height: 55,
@@ -28,13 +29,13 @@ class LinhaProduto extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 400,
+              width: 340,
               child: Center(
                 child: Text(produto.nome, style: const TextStyle(fontSize: 14)),
               ),
             ),
             SizedBox(
-              width: 120,
+              width: 140,
               child: Center(
                 child: Text(
                   "R\$ ${produto.preco.toStringAsFixed(2)}",
@@ -43,7 +44,7 @@ class LinhaProduto extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 70,
+              width: 100,
               child: Center(
                 child: Text(
                   ("${produto.estoqueDisponivel}"),
@@ -52,7 +53,7 @@ class LinhaProduto extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 70,
+              width: 100,
               child: Center(
                 child: Text(
                   ("${produto.estoqueReservado}"),
@@ -61,7 +62,7 @@ class LinhaProduto extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 70,
+              width: 100,
               child: Center(
                 child: Text(
                   ("${produto.estoquePendente}"),

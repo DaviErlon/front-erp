@@ -1,5 +1,6 @@
 import 'package:fronterp/dtos/funcionario_dto.dart';
 import 'package:fronterp/dtos/item_produto_dto.dart';
+import 'package:fronterp/utils/utils.dart';
 
 class TituloDto {
   String _id;
@@ -52,7 +53,7 @@ class TituloDto {
   String get nome => _nome;
   String get telefone => _telefone;
   FuncionarioDto? get emissor => _emissor;
-  String get dataEmissao => _formatarDataOffset(_dataEmissao);
+  String get dataEmissao => Util.formatarDataOffset(_dataEmissao);
   List<ItemProdutoDto> get produtos => _produtos;
 
   // Setters...
@@ -89,20 +90,5 @@ class TituloDto {
               )
               .toList(),
     );
-  }
-
-  static String _formatarDataOffset(String offsetDateTimeString) {
-    final dateTime = DateTime.parse(offsetDateTimeString).toUtc();
-
-    String dois(int n) => n.toString().padLeft(2, '0');
-
-    final dia = dois(dateTime.day);
-    final mes = dois(dateTime.month);
-    final ano = dateTime.year.toString();
-
-    final hora = dois(dateTime.hour);
-    final minuto = dois(dateTime.minute);
-
-    return "$dia/$mes/$ano $hora:$minuto";
   }
 }

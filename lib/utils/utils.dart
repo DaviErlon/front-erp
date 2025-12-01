@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../auth/auth_state.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ControllerGenerico<T> {
   final void Function()? onPressed;
@@ -26,13 +26,10 @@ class ControllerDialogTitulos {
   bool? _aprovado;
   bool? _recebido;
 
-  ControllerDialogTitulos({
-    bool? pago,
-    bool? aprovado,
-    bool? recebido,
-  })  : _pago = pago,
-        _aprovado = aprovado,
-        _recebido = recebido;
+  ControllerDialogTitulos({bool? pago, bool? aprovado, bool? recebido})
+    : _pago = pago,
+      _aprovado = aprovado,
+      _recebido = recebido;
 
   // GETTERS
   bool? get pago => _pago;
@@ -69,7 +66,6 @@ class ControllerDialogTitulos {
   }
 }
 
-
 class ControllerDialogProdutos {
   bool? _esgotado;
   bool? _encomendado;
@@ -88,7 +84,7 @@ class ControllerDialogProdutos {
   bool? get encomendado => _encomendado;
   bool? get reservado => _reservado;
 
-  void clear(){
+  void clear() {
     _esgotado = null;
     _encomendado = null;
     _reservado = null;
@@ -109,6 +105,62 @@ class ControllerDialogProdutos {
   }
 }
 
+class Util {
+  static String formatarDataOffset(String offsetDateTimeString) {
+    final dateTime = DateTime.parse(offsetDateTimeString);
+
+    String dois(int n) => n.toString().padLeft(2, '0');
+
+    final dia = dois(dateTime.day);
+    final mes = dois(dateTime.month);
+    final ano = dateTime.year.toString();
+
+    final hora = dois(dateTime.hour);
+    final minuto = dois(dateTime.minute);
+
+    return "$dia/$mes/$ano $hora:$minuto";
+  }
+
+  static InputDecoration estiloTextFiel({
+    required String label,
+    String? hint,
+    Widget? suffixIcon
+  }) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      suffixIcon: suffixIcon,
+
+      filled: true,
+      fillColor: Colors.deepPurple.withValues(alpha: 0.05),
+
+      labelStyle: GoogleFonts.roboto(
+        color: Colors.deepPurple.shade700,
+        fontWeight: FontWeight.w500,
+      ),
+
+      hintStyle: GoogleFonts.roboto(color: Colors.grey.shade600, fontSize: 14),
+
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.deepPurple.shade200),
+      ),
+
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.deepPurple.shade100),
+      ),
+
+      focusedBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Colors.deepPurple, width: 2),
+      ),
+    );
+  }
+}
+
 mixin LogoutMixin {
   Future<void> doLogout(BuildContext context) async {
     await context.read<AuthState>().logout();
@@ -116,8 +168,7 @@ mixin LogoutMixin {
   }
 }
 
-
-enum Funcionario { ceo, gestor, operador, almoxarife, financeiro, tesoureiro}
+enum Funcionario { ceo, gestor, operador, almoxarife, financeiro, tesoureiro }
 
 enum Plano { basico, intermediario, completo, nenhum }
 

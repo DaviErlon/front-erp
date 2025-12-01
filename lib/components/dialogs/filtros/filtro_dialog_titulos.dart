@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fronterp/components/filtrosdialog/filtro_dialog.dart';
+import 'package:fronterp/components/dialogs/filtros/filtro_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FiltrosDialogTitulos extends StatefulWidget {

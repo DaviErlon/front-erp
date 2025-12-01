@@ -23,15 +23,15 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
     try {
       late PaginaDto<ClienteDto> dados;
 
-      switch(_tipoPesquisa.data){
+      switch (_tipoPesquisa.data) {
         case Pesquisa.nome:
-        dados = await CeoService.getClientes(nome: _buscaController.text);
+          dados = await CeoService.getClientes(nome: _buscaController.text);
           break;
         case Pesquisa.cpf:
-        dados = await CeoService.getClientes(cpf: _buscaController.text);
+          dados = await CeoService.getClientes(cpf: _buscaController.text);
           break;
         case Pesquisa.telefone:
-        dados = await CeoService.getClientes(telefone: _buscaController.text);
+          dados = await CeoService.getClientes(telefone: _buscaController.text);
           break;
         case _:
           break;
@@ -184,19 +184,72 @@ class _ModuloClientesState extends State<ModuloClientes> with LogoutMixin {
                 width: 970,
                 child: _clientes == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Scrollbar(
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          itemCount: _clientes!.dados.length,
-                          itemBuilder: (context, index) {
-                            final cliente = _clientes!.dados[index];
-                            return LinhaCliente(
-                              cliente: cliente,
-                              isEven: index % 2 == 0,
-                              onTap: () {},
-                            );
-                          },
-                        ),
+                    : Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(color: Colors.grey[500]),
+                            child: Row(
+                              spacing: 30,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 440,
+                                  child: Center(
+                                    child: Text(
+                                      'Nome',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Cpf',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      'Telefone',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                itemCount: _clientes!.dados.length,
+                                itemBuilder: (context, index) {
+                                  final cliente = _clientes!.dados[index];
+                                  return LinhaCliente(
+                                    cliente: cliente,
+                                    isEven: index % 2 == 0,
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ],

@@ -85,31 +85,31 @@ class _CadastroPageState extends State<CadastroPage> {
                       ),
                       TextField(
                         controller: _nomeController,
-                        decoration: InputDecoration(
-                          labelText: 'auth.signup.name_label'.tr(),
-                          hintText: "Digite seu nome completo",
+                        decoration: Util.estiloTextFiel(
+                          label: 'auth.signup.name_label'.tr(),
+                          hint: "Digite seu nome completo",
                         ),
                       ),
                       TextField(
                         controller: _cpfController,
-                        decoration: InputDecoration(
-                          labelText: 'auth.signup.cpf_label'.tr(),
-                          hintText: 'auth.signup.cpf_hint'.tr(),
+                        decoration: Util.estiloTextFiel(
+                          label: 'auth.signup.cpf_label'.tr(),
+                          hint: 'auth.signup.cpf_hint'.tr(),
                         ),
                       ),
                       TextField(
                         controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'auth.signup.email_label'.tr(),
-                          hintText: 'auth.signup.email_hint'.tr(),
+                        decoration: Util.estiloTextFiel(
+                          label: 'auth.signup.email_label'.tr(),
+                          hint: 'auth.signup.email_hint'.tr(),
                         ),
                       ),
                       TextField(
                         controller: _senhaController,
                         obscureText: !_senhaOculta.data,
-                        decoration: InputDecoration(
-                          labelText: 'auth.signup.password_label'.tr(),
-                          hintText: 'auth.signup.password_hint'.tr(),
+                        decoration: Util.estiloTextFiel(
+                          label: 'auth.signup.password_label'.tr(),
+                          hint: 'auth.signup.password_hint'.tr(),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _senhaOculta.data
